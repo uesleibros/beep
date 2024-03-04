@@ -1,27 +1,11 @@
 const Client = require("../src/pkg/classes/Client.js");
+require("dotenv").config();
 
-bot = new Client({ "intents": ["MessageContent", "Guilds", "GuildMessages"], "token": "TOKEN_HERE", "prefix": "!" });
+bot = new Client({ "intents": ["MessageContent", "Guilds", "GuildMessages"], "token": process.env.BOT_TOKEN, "prefix": "!" });
 
 bot.createCommand(
 	"teste",
 	`
-		Olá, me diga qual é o seu nome?
-		$awaitFunc[obterNome]
+		$checkContains[Batata Frita;Margarina]
 	`
 );
-
-bot.createCommand(
-	"obterNome",
-	`
-		Uau, seu nome é: **$message**.
-		Agora quero saber seu gênero!
-		$awaitFunc[obterGen]
-	`
-);
-
-bot.createCommand(
-	"obterGen",
-	`
-		Ok, seu gênero é $message.
-	`
-)
