@@ -11,7 +11,7 @@ async function checkContains(code, client, message, raw, options) {
 		await message.channel.send("✖ | Function `$checkContains` needs text and phrases.");
 		error = true;
 	} else {
-		args.slice(0, 1);
+		args.splice(0, 1);
 		for (const phrase of args) {
 			phrases.push(phrase);
 		}
