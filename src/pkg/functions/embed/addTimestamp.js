@@ -1,19 +1,18 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
-async function title(code, client, message, raw, options) {
+async function addTimestamp(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	let error = false;
+	const error = await FunctionError("addTimestamp", [], args, true, message);
 
-	if (args.length > 1) {
-		await message.channel.send("✖ | Function `$addTimestamp` can't have arguments.");
-		error = true;
-	} else {
+	if (!error) {
 		options.embed.setTimestamp();
-		code = code.replace(raw, '');
+		code = await FunctionResult(code, raw, '');
 	}
 
 	return { code, error, options };
 }
 
-module.exports = title;
+module.exports = addTimestamp;

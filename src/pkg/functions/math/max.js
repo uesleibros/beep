@@ -1,26 +1,20 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
 async function max(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = false;
-
+	const error = await FunctionError("max", ["number:unlimited"], args, false, message);
 	const numbers = [];
 
-	if (args.length < 1) {
-		await message.channel.send("✖ | Function `$max` atleast 1 argument.");
-		error = true;
-	} else {
+	if (!error) {
 		for (const number of args) {
-			if (isNaN(number)) {
-				await message.channel.send(`✖ | Function \`$max\` value: ${number} needs to be a number.`);
-				error = true;
-			} else {
-				numbers.push(Number(number));
-			}
+			numbers.push(Number(number));
 		}
-		code = code.replace(raw, Math.max(...numbers));
+		code = await FunctionResult(code, raw, Math.max(...numbers));
 	}
+
 	return { code, error, options };
 };
 

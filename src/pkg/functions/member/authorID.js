@@ -1,15 +1,13 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function authorID(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	let error = false;
+	const error = await FunctionError("authorID", [], args, true, message);
 
-	if (args.length > 0) {
-		await message.channel.send("✖ | Function `$authorID` can't have arguments.");
-		error = true;
-	} else {
-		code = code.replace(raw, message.author.id);
-	}
+	if (!error)
+		code = await FunctionResult(code, raw, message.author.id);
 	return { code, error, options };
 };
 

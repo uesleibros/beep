@@ -1,15 +1,14 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function exitfor(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	let error = false;
+	const error = await FunctionError("exitfor", [], args, true, message);
 
-	if (args.length > 0) {
-		await message.channel.send("✖ | Function `$exitfor` can't have arguments.");
-		error = true;
-	} else {
+	if (!error) {
 		options.loop.break = true;
-		code = code.replace(raw, '');
+		code = await FunctionResult(code, raw, '');
 	}
 	return { code, error, options };
 };

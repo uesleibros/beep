@@ -1,16 +1,15 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
 async function nomention(code, client, message, raw, options) {
-	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = false;
+	const args = getFunctionArgs(raw)
+	const error = await FunctionError("nomention", [], args, true, message);
 
-	if (args.length > 0) {
-		await message.channel.send("✖ | Function `$nomention` can't have arguments.");
-		error = true;
-	} else {
+	if (!error) {
 		options.msg.mentionAuthor = false;
-		code = code.replace(raw, '');
+		code = FunctionResult(code, raw, '');
 	}
 
 	return { code, error, options };

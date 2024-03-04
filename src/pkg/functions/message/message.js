@@ -1,28 +1,15 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
 async function message(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = false;
+	const error = await FunctionError("message", ["number:op"], args, true, message);
 
-	if (args.length == 1) {
-		if (isNaN(args[0])) {
-			await message.channel.send("✖ | Function `$message` first argument needs to be a number.");
-			error = true;
-		} else {
-			if (Number(args[0]) - 1 > message.content.split(" ").length) {
-				code = code.replace(raw, undefined);
-			} else {
-				code = code.replace(raw, message.content.split(" ")[Number(args[0]) - 1]);
-			}
-		}
-	} else {
-		if (args.length > 1) {
-			await message.channel.send("✖ | `$message` only support 1 argument.");
-			error = true;
-		} else {
-			code = code.replace(raw, message.content);
-		}
+	if (!error) {
+		let index = args[0] ? Number(args[0]) - 1 : -1;
+		code = await FunctionResult(code, raw, index < 0 ? message.content : message.content.split(' ')[index]);
 	}
 	return { code, error, options };
 };

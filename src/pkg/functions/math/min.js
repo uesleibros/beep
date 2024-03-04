@@ -1,26 +1,20 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
 async function min(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = false;
-
+	const error = await FunctionError("min", ["number:unlimited"], args, false, message);
 	const numbers = [];
 
-	if (args.length < 1) {
-		await message.channel.send("✖ | Function `$min` atleast 1 argument.");
-		error = true;
-	} else {
+	if (!error) {
 		for (const number of args) {
-			if (isNaN(number)) {
-				await message.channel.send(`✖ | Function \`$min\` value: ${number} needs to be a number.`);
-				error = true;
-			} else {
-				numbers.push(Number(number));
-			}
+			numbers.push(Number(number));
 		}
-		code = code.replace(raw, Math.min(...numbers));
+		code = await FunctionResult(code, raw, Math.min(...numbers));
 	}
+
 	return { code, error, options };
 };
 

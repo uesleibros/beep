@@ -27,10 +27,6 @@ function getFunctionArgs(function_raw) {
 		}
 	}
 
-	/*for (const idx in result) {
-		if (result[idx].length === 0)
-			result.slice(idx, 1);
-	}*/
 	return result;
 }
 

@@ -6,7 +6,6 @@ bot = new Client({ "intents": ["MessageContent", "Guilds", "GuildMessages"], "to
 bot.createCommand(
 	"teste",
 	`
-		$noMentionMessage
-		$noMentionMessage[1]
+		
 	`
 );

@@ -63,7 +63,7 @@ async function interpreter(client, message, code, options, send_message = true) 
 
 	if (send_message) {
 		if (options.msg.mentionAuthor)
-			code += `<@${message.author.id}>`;
+			code = `<@${message.author.id}> ${code}`;
 		const responseObject = { content: code };
 
 		if (Object.keys(options.embed.data).length > 0)

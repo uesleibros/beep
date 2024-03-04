@@ -1,3 +1,5 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 const truncate = require("../../helpers/truncate.js");
@@ -5,26 +7,11 @@ const truncate = require("../../helpers/truncate.js");
 async function noMentionMessage(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
 	const customMessage = truncate(message.content.replace(/<@[^>]+>/g, ''));
-	let error = false;
+	const error = await FunctionError("noMentionMessage", ["number:op"], args, true, message);
 
-	if (args.length > 0) {
-		if (isNaN(args[0])) {
-			await message.channel.send("✖ | Function `$noMentionMessage` first argument needs to be a number.");
-			error = true;
-		} else {
-			if (Number(args[0]) - 1 > customMessage.split(" ").length) {
-				code = code.replace(raw, undefined);
-			} else {
-				code = code.replace(raw, customMessage.split(" ")[Number(args[0]) - 1]);
-			}
-		}
-	} else {
-		if (args.length > 1) {
-			await message.channel.send("✖ | `$noMentionMessage` only support 1 argument.");
-			error = true;
-		} else {
-			code = code.replace(raw, customMessage);
-		}
+	if (!error) {
+		let index = args[0] ? Number(args[0]) - 1 : -1;
+		code = await FunctionResult(code, raw, index < 0 ? customMessage : customMessage.split(' ')[index]);
 	}
 	return { code, error, options };
 };
