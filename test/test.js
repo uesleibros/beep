@@ -1,6 +1,6 @@
 const Client = require("../src/pkg/classes/Client.js");
 
-bot = new Client({ "intents": ["MessageContent", "Guilds", "GuildMessages"], "token": "MTA3MDE0NzExMjU5MzAwNjU5Mw.Gvthfa.PkPwBPKm87YYm9dEb2YBHr6TQ-v0u_WE_YPxO0", "prefix": "!" });
+bot = new Client({ "intents": ["MessageContent", "Guilds", "GuildMessages"], "token": "TOKEN_HERE", "prefix": "!" });
 
 bot.createCommand(
 	"teste",
