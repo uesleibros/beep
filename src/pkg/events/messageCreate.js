@@ -11,6 +11,7 @@ module.exports = {
 		const string = { textSplit: [] };
 		const variables = {};
 		const envVariables = {};
+		const msg = { mentionAuthor: true };
 		const loop = { break: false };
 
 
@@ -23,7 +24,7 @@ module.exports = {
 					if (former_cmd.trim() in this.client.commands) {
 						const COMMAND_NAME = former_cmd.trim();
 						message.content = message.content.slice(COMMAND_NAME.length + 1).trim();
-						await interpreter(this.client, message, this.client.commands[COMMAND_NAME].code, { embed, string, variables, envVariables, loop });
+						await interpreter(this.client, message, this.client.commands[COMMAND_NAME].code, { embed, string, variables, envVariables, msg, loop });
 						return;
 					}
 				}
@@ -43,7 +44,7 @@ module.exports = {
 
 			if (latestAwaitedCommand) {
 				console.log(this.client.listAwaitedCommands);
-				await interpreter(this.client, message, this.client.commands[latestAwaitedCommand[1]].code, { embed, string, variables, envVariables, loop });
+				await interpreter(this.client, message, this.client.commands[latestAwaitedCommand[1]].code, { embed, string, variables, envVariables, msg, loop });
 				this.client.listAwaitedCommands.splice(indexOfLatestAwaitedCommand, 1);
 			}
 		}

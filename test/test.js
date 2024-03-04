@@ -6,6 +6,7 @@ bot = new Client({ "intents": ["MessageContent", "Guilds", "GuildMessages"], "to
 bot.createCommand(
 	"teste",
 	`
-		$checkContains[Batata Frita;Margarina]
+		$noMentionMessage
+		$noMentionMessage[1]
 	`
 );

@@ -1,13 +1,13 @@
-const structuredFunctions = require("./helpers/structuredFunctions.js");
 const Condition = require("./helpers/parser/Condition.js");
 const Loop = require("./helpers/parser/Loop.js");
+const truncate = require("./helpers/truncate.js");
+const structuredFunctions = require("./helpers/structuredFunctions.js");
 const functions = structuredFunctions();
 
 async function interpreter(client, message, code, options, send_message = true) {
 	const commandWaitList = [];
 	let customMessage;
-	code = code.split('\n').map(line => line.trim()).join("\n");
-	code = code.replace(/\/\/.*|\/\*[\s\S]*?\*\//g, '');
+	code = truncate(code);
 
 	const regex = /\{([^}]+)\}/g;
 	const matches = code.match(regex);
@@ -62,7 +62,10 @@ async function interpreter(client, message, code, options, send_message = true) 
 	}
 
 	if (send_message) {
+		if (options.msg.mentionAuthor)
+			code += `<@${message.author.id}>`;
 		const responseObject = { content: code };
+
 		if (Object.keys(options.embed.data).length > 0)
 			responseObject.embeds = [options.embed];
 
