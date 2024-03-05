@@ -1,3 +1,5 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
@@ -12,14 +14,10 @@ function makeTitleCase(str) {
 
 async function toTitleCase(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = false;
+	const error = await FunctionError("toTitleCase", ["string:non-op"], args, false, message);
 
-	if (args.length < 1) {
-		await message.channel.send("✖ | Function `$toTitleCase` needs to provide a text.");
-		error = true;
-	} else {
-		code = code.replace(raw, makeTitleCase(args[0]));
-	}
+	if (!error)
+		code = await FunctionResult(code, raw, makeTitleCase(args[0]));
 	return { code, error, options };
 };
 

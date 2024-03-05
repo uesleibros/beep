@@ -1,3 +1,5 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
@@ -15,19 +17,11 @@ function replaceNtimes(input, searchValue, replaceValue, n) {
 
 async function replaceText(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = false;
+	const error = await FunctionError("replaceText", ["string:non-op", "string:non-op", "string:non-op", "number:op"], args, false, message);
 
-	if (args.length < 2) {
-		await message.channel.send("✖ | Function `$replaceText` needs to provide text, target, new value and replacement times (optional).");
-		error = true;
-	} else {
-		const replaceTimes = args.length > 2 ? args[3] : 1;
-		if (isNaN(replaceTimes)) {
-			await message.channel.send("✖ | Function `$replaceText` replace times needs to be a number.");
-			error = true;
-		} else {
-			code = code.replace(raw, replaceNtimes(args[0], args[1], args[2], args[3]))
-		}
+	if (!error) {
+		const replaceTimes = args[3] ? Number(args[3]) : 1;
+		code = await FunctionResult(code, raw, replaceNtimes(args[0], args[1], args[2], replaceTimes))
 	}
 
 	return { code, error, options };

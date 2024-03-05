@@ -1,21 +1,14 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
 async function cropText(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = false;
+	const error = await FunctionError("cropText", ["string:non-op", "number:non-op", "string:non-op"], args, false, message);
 
-	if (args.length < 3) {
-		await message.channel.send("✖ | Function `$cropText` needs to provide text, max characters and ending.");
-		error = true;
-	} else {
-		if (isNaN(args[1])) {
-			await message.channel.send("✖ | `$cropText` max characters needs to be a number");
-			error = true;
-		} else {
-			code = code.replace(raw, args[0].substring(0, Number(args[1])) + args[2]);
-		}
-	}
+	if (!error)
+		code = await FunctionResult(code, raw, args[0].substring(0, Number(args[1])) + args[2]);
 
 	return { code, error, options };
 }

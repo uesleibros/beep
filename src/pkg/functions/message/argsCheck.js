@@ -1,14 +1,13 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function argsCheck(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	const messageArgsLength = message.content.length === 0 ? 0 : message.content.split(' ').length;
-	let error = false;
+	const messageArgsLength = message.content.split(' ').length;
+	let error = await FunctionError("argsCheck", ["string:non-op", "string:non-op"], args, false, message);
 
-	if (args.length < 2) {
-		await message.channel.send(`✖ | Function \`$argsCheck\` needs 2 arguments, but only passed \`${args.length}\`.`);
-		error = true;
-	} else {
+	if (!error) {
 		const regex = /<=|>=|<|>|!=|==/g;
 		const checks = {
 			'<': messageArgsLength < Number(args[0].replace('<', '').trim()),
@@ -20,15 +19,15 @@ async function argsCheck(code, client, message, raw, options) {
 		}
 
 		const condition = regex.exec(args[0]);
-		if (condition === null) {
-			await message.channel.send("✖ | First argument of function `$argsCheck` needs to be: `<value`, `>value`, `<=value`, `>=value`, `!=value`, `==value`")
+		if (!condition) {
+			await message.channel.send("`$argsCheck` needs to be: `<size`, `>size`, `<=size`, `>=size`, `!=size`, `==size`")
 			error = true;
 		} else {
 			if (!checks[condition[0]]) {
 				await message.channel.send(args[1]);
 				error = true;
 			}
-			code = code.replace(raw, '');
+			code = await FunctionResult(code, raw, '');
 		}
 	}
 

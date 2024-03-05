@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "discord-emojis-parser": "^1.0.6",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5"
   }

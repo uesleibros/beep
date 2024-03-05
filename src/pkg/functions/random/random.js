@@ -1,26 +1,16 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
 async function random(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = false;
+	const error = await FunctionError("random", ["number:non-op", "number:non-op"], args, true, message);
 
-	if (args.length === 0) {
-		code = code.replace(raw, Math.floor(Math.random() * 11));
-	} else {
-		if (args.length < 2) {
-			await message.channel.send("✖ | Function `$random` needs to provide min and max.");
-			error = true;
-		} else {
-			if (isNaN(args[0]) && isNaN(args[1])){
-				await message.channel.send("✖ | Function `$random` min and max needs to be a number.");
-				error = true;
-			} else {
-				const minCeiled = Math.ceil(Number(args[0]));
-				const maxFloored = Math.floor(Number(args[1]) + 1);
-				code = code.replace(raw, Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled));
-			}
-		}
+	if (!error) {
+		const minCeiled = Math.ceil(Number(args[0] ? args[0] : 0));
+		const maxFloored = Math.floor(Number(args[1] ? args[1] : 10) + 1);
+		code = await FunctionResult(code, raw, Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled));
 	}
 	return { code, error, options };
 };

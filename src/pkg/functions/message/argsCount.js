@@ -1,15 +1,13 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function argsCount(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	let error = false;
+	const error = await FunctionError("argsCount", [], args, true, message);
 
-	if (args.length > 0) {
-		await message.channel.send(`✖ | Function \`$charCount\` can't have arguments.`);
-		error = true;
-	} else {
-		code = code.replace(raw, message.content.length === 0 ? 0 : message.content.split(' ').length);
-	}
+	if (!error)
+		code = await FunctionResult(code, raw, message.content.split(' ').length);
 	return { code, error, options };
 };
 

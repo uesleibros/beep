@@ -1,20 +1,19 @@
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
 async function randomText(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
 	const texts = [];
-	let error = false;
+	const error = await FunctionError("randomText", ["string:unlimited"], args, false, message);
 
-	if (args.length < 1) {
-		await message.channel.send("✖ | Function `$randomText` needs atleast one text.");
-		error = true;
-	} else {
+	if (!error) {
 		for (const text of args) {
 			texts.push(text);
 		}
 		const picked = Math.floor(Math.random() * texts.length);
-		code = code.replace(raw, texts[picked]);
+		code = await FunctionResult(code, raw, texts[picked]);
 	}
 	return { code, error, options };
 };
