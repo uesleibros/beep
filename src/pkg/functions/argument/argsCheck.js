@@ -1,12 +1,14 @@
 const FunctionError = require("../../helpers/errors/FunctionError.js");
 const FunctionResult = require("../../helpers/result/FunctionResult.js");
+const truncate = require("../../helpers/truncate.js")
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function argsCheck(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	const messageArgsLength = message.content.split(' ').length;
+	const messageArgsLength = message.content.trim().length === 0 ? 0 : message.content.trim().split(' ').length;
 	let error = await FunctionError("argsCheck", ["string:non-op", "string:non-op"], args, false, message);
 
+	console.log(messageArgsLength);
 	if (!error) {
 		const regex = /<=|>=|<|>|!=|==/g;
 		const checks = {
@@ -23,6 +25,7 @@ async function argsCheck(code, client, message, raw, options) {
 			await message.channel.send("`$argsCheck` needs to be: `<size`, `>size`, `<=size`, `>=size`, `!=size`, `==size`")
 			error = true;
 		} else {
+			console.log(condition, checks[condition[0]])
 			if (!checks[condition[0]]) {
 				await message.channel.send(args[1]);
 				error = true;

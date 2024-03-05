@@ -6,6 +6,6 @@ bot = new Client({ "intents": ["MessageContent", "Guilds", "GuildMessages"], "to
 bot.createCommand(
 	"teste",
 	`
-		
+		$argsCheck[<1;oi]
 	`
 );

@@ -30,7 +30,6 @@ function structuredFunctions(folder = "") {
 		console.error("Erro ao percorrer as pastas:", error);
 	}
 
-	console.log(functions);
 	return functions;
 }
 
