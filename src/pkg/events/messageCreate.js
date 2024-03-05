@@ -12,6 +12,7 @@ module.exports = {
 		const variables = {};
 		const envVariables = {};
 		const msg = { mentionAuthor: true };
+		const json = { object: null };
 		const loop = { break: false };
 
 
@@ -24,7 +25,7 @@ module.exports = {
 					if (former_cmd.trim() in this.client.commands) {
 						const COMMAND_NAME = former_cmd.trim();
 						message.content = message.content.slice(COMMAND_NAME.length + 1).trim();
-						await interpreter(this.client, message, this.client.commands[COMMAND_NAME].code, { embed, string, variables, envVariables, msg, loop });
+						await interpreter(this.client, message, this.client.commands[COMMAND_NAME].code, { embed, string, variables, envVariables, msg, json, loop });
 						return;
 					}
 				}

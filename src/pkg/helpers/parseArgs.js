@@ -1,4 +1,4 @@
-async function parseArgs(client, message, args, options = {}) {
+async function parseArgs(client, message, args, options = {}, for_json = false) {
 	let listArgs = [...args];
 	for (const idx in args) {
 		let code = args[idx];

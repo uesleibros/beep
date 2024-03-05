@@ -9,8 +9,7 @@ async function username(code, client, message, raw, options) {
 
 	if (!error) {
 		const userID = args[0] ? await client.users.cache.get(args[0]) : -1;
-		console.log(userID);
-		code = await FunctionResult(code, raw, userID === -1 ? message.author.name : userID?.username);
+		code = await FunctionResult(code, raw, userID === -1 ? message.author.username : userID?.username);
 	}
 	return { code, error, options };
 }
