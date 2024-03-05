@@ -15,6 +15,6 @@ async function sendMessage(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, retrieveID ? id.id : '')
 	}
 	return { code, error, options };
-};
+}
 
 module.exports = sendMessage;

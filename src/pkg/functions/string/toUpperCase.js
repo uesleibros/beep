@@ -10,6 +10,6 @@ async function toUpperCase(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, args[0].toUpperCase());
 	return { code, error, options };
-};
+}
 
 module.exports = toUpperCase;

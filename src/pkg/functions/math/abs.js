@@ -10,6 +10,6 @@ async function abs(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, Math.abs(Number(args[0])));
 	return { code, error, options };
-};
+}
 
 module.exports = abs;

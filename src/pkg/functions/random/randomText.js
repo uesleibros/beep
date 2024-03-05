@@ -16,6 +16,6 @@ async function randomText(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, texts[picked]);
 	}
 	return { code, error, options };
-};
+}
 
 module.exports = randomText;

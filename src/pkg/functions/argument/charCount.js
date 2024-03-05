@@ -10,6 +10,6 @@ async function charCount(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, args[0].length);
 	return { code, error, options };
-};
+}
 
 module.exports = charCount;

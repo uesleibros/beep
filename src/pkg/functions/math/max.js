@@ -16,6 +16,6 @@ async function max(code, client, message, raw, options) {
 	}
 
 	return { code, error, options };
-};
+}
 
 module.exports = max;

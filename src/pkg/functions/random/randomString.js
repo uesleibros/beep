@@ -20,6 +20,6 @@ async function randomString(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, result);
 	}
 	return { code, error, options };
-};
+}
 
 module.exports = randomString;

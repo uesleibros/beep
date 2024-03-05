@@ -5,7 +5,7 @@ async function parseArgs(client, message, args, options = {}) {
 	let listArgs = [...args];
 	for (const idx in args) {
 		let code = args[idx];
-		const regex = /\$\w+(?:\[(?:[^\[\]]*|\[(?:[^\[\]]*|\[(?:[^\[\]]*)*\])*\])*\])?/g;
+		const regex = /\$\w+(?:\[(?:[^\][]*|\[(?:[^\][]*|\[(?:[^\][]*)*\])*\])*\])?/g;;
 		const matches = code.match(regex);
 		let error;
 

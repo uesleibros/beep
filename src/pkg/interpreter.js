@@ -22,7 +22,7 @@ async function interpreter(client, message, code, options, send_message = true) 
 		}
 	}
 
-	const commandRegex = /\$\w+(?:\[(?:[^\[\]]*|\[(?:[^\[\]]*|\[(?:[^\[\]]*)*\])*\])*\])?/g;
+	const commandRegex = /\$\w+(?:\[(?:[^\][]*|\[(?:[^\][]*|\[(?:[^\][]*)*\])*\])*\])?/g;
 	const commandMatches = code.match(commandRegex);
 	let error;
 
@@ -55,7 +55,7 @@ async function interpreter(client, message, code, options, send_message = true) 
 
 				if (error) return;
 			} else {
-				await message.channel.send(`⚠ | Invalid function \`\$${FUNC_NAME}\` is not defined.`);
+				await message.channel.send(`⚠ | Invalid function \`${FUNC_NAME}\` is not defined.`);
 				return;
 			}
 		}
@@ -85,6 +85,6 @@ async function interpreter(client, message, code, options, send_message = true) 
 			}
 		}
 	}
-};
+}
 
 module.exports = interpreter;

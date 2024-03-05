@@ -61,7 +61,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, messa
 	}
 
 	return false;
-};
+}
 
 async function CheckUnlimited(name, argType, argsValue, message, startIndex) {
 	for (let i = 0; i < argsValue.length; i++) {

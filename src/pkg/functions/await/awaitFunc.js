@@ -18,6 +18,6 @@ async function awaitFunc(code, client, message, raw, options) {
 	}
 
 	return { code, error, options };
-};
+}
 
 module.exports = awaitFunc;

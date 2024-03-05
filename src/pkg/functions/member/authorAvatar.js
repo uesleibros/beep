@@ -9,6 +9,6 @@ async function authorAvatar(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, `https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png?size=256`);
 	return { code, error, options };
-};
+}
 
 module.exports = authorAvatar;

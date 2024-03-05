@@ -9,6 +9,6 @@ async function authorID(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, message.author.id);
 	return { code, error, options };
-};
+}
 
 module.exports = authorID;

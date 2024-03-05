@@ -9,6 +9,6 @@ async function argsCount(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, message.content.trim().length === 0 ? 0 : message.content.trim().split(' ').length);
 	return { code, error, options };
-};
+}
 
 module.exports = argsCount;

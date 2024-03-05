@@ -14,6 +14,6 @@ async function noMentionMessage(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, index < 0 ? customMessage : customMessage.split(' ')[index]);
 	}
 	return { code, error, options };
-};
+}
 
 module.exports = noMentionMessage;

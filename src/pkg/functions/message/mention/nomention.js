@@ -1,7 +1,6 @@
 const FunctionError = require("../../helpers/errors/FunctionError.js");
 const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
-const parseArgs = require("../../helpers/parseArgs.js");
 
 async function nomention(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw)
@@ -13,6 +12,6 @@ async function nomention(code, client, message, raw, options) {
 	}
 
 	return { code, error, options };
-};
+}
 
 module.exports = nomention;

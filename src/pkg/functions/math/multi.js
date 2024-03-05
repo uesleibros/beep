@@ -11,6 +11,6 @@ async function multi(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, Number(args[0]) * Number(args[1]));
 
 	return { code, error, options };
-};
+}
 
 module.exports = multi;

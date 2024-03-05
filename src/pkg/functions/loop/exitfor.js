@@ -11,6 +11,6 @@ async function exitfor(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, '');
 	}
 	return { code, error, options };
-};
+}
 
 module.exports = exitfor;

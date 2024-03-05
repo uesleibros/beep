@@ -10,6 +10,6 @@ async function toLowerCase(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, args[0].toLowerCase());
 	return { code, error, options };
-};
+}
 
 module.exports = toLowerCase;

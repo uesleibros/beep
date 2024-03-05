@@ -13,6 +13,6 @@ async function username(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, userID === -1 ? message.author.name : userID?.username);
 	}
 	return { code, error, options };
-};
+}
 
 module.exports = username;

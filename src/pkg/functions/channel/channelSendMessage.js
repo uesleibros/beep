@@ -19,6 +19,6 @@ async function channelSendMessage(code, client, message, raw, options) {
 	}
 	
 	return { code, error, options };
-};
+}
 
 module.exports = channelSendMessage;

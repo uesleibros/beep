@@ -16,6 +16,6 @@ async function min(code, client, message, raw, options) {
 	}
 
 	return { code, error, options };
-};
+}
 
 module.exports = min;

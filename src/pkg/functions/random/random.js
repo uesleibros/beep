@@ -13,6 +13,6 @@ async function random(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled));
 	}
 	return { code, error, options };
-};
+}
 
 module.exports = random;

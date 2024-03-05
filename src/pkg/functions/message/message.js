@@ -12,6 +12,6 @@ async function message(code, client, message, raw, options) {
 		code = await FunctionResult(code, raw, index < 0 ? message.content : message.content.split(' ')[index]);
 	}
 	return { code, error, options };
-};
+}
 
 module.exports = message;

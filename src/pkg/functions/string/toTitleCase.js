@@ -19,6 +19,6 @@ async function toTitleCase(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, makeTitleCase(args[0]));
 	return { code, error, options };
-};
+}
 
 module.exports = toTitleCase;

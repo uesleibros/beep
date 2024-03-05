@@ -10,6 +10,6 @@ async function mentioned(code, client, message, raw, options) {
 	if (!error)
 		code = await FunctionResult(code, raw, message.mentions.users.at(Number(args[0]) - 1)?.id);
 	return { code, error, options };
-};
+}
 
 module.exports = mentioned;
