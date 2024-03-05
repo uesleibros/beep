@@ -1,11 +1,11 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-function structuredFunctions() {
-	const functions = {};
+function structuredFunctions(folder = "") {
+	let functions = {};
 
 	try {
-		const functionsFolderPath = path.join(__dirname, "../functions");
+		const functionsFolderPath = folder.length === 0 ? path.join(__dirname, "../functions") : folder;
 		const items = fs.readdirSync(functionsFolderPath);
 
 		for (const item of items) {
@@ -13,13 +13,12 @@ function structuredFunctions() {
 		   const stats = fs.statSync(itemPath);
 
 		   if (stats.isDirectory()) {
-				const files = fs.readdirSync(itemPath);
-				for (const file of files) {
-					if (path.extname(file) === ".js") {
-						const functionName = path.basename(file, ".js");
-						functions[functionName] = itemPath;
+				const subFunctions = structuredFunctions(itemPath);
+				for (const functionName in subFunctions) {
+					if (!functions.hasOwnProperty(functionName)) {
+						functions[functionName] = subFunctions[functionName];
 					}
-				}
+	         }
 		   } else {
 				if (path.extname(item) === ".js") {
 					const functionName = path.basename(item, ".js");
@@ -31,6 +30,7 @@ function structuredFunctions() {
 		console.error("Erro ao percorrer as pastas:", error);
 	}
 
+	console.log(functions);
 	return functions;
 }
 
