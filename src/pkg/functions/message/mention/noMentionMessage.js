@@ -1,8 +1,8 @@
-const FunctionError = require("../../helpers/errors/FunctionError.js");
-const FunctionResult = require("../../helpers/result/FunctionResult.js");
-const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
-const parseArgs = require("../../helpers/parseArgs.js");
-const truncate = require("../../helpers/truncate.js");
+const FunctionError = require("../../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../../helpers/result/FunctionResult.js");
+const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
+const parseArgs = require("../../../helpers/parseArgs.js");
+const truncate = require("../../../helpers/truncate.js");
 
 async function noMentionMessage(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);

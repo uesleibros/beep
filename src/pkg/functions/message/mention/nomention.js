@@ -1,6 +1,6 @@
-const FunctionError = require("../../helpers/errors/FunctionError.js");
-const FunctionResult = require("../../helpers/result/FunctionResult.js");
-const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
+const FunctionError = require("../../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../../helpers/result/FunctionResult.js");
+const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
 
 async function nomention(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw)
@@ -8,7 +8,7 @@ async function nomention(code, client, message, raw, options) {
 
 	if (!error) {
 		options.msg.mentionAuthor = false;
-		code = FunctionResult(code, raw, '');
+		code = await FunctionResult(code, raw, '');
 	}
 
 	return { code, error, options };
