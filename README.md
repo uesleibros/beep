@@ -12,7 +12,7 @@ Programming Language developed to work with bot commands using `$name[args]` int
 ```php
 // !say
 $nomention // Prevent mention user on bot send message.
-$argsCheck[<1;Provide a text.] // Check if arguments are provided.
+$argsCheck[>0;Provide a text.] // Check if arguments are provided.
 You say: $message // Bot will send this.
 ```
 
