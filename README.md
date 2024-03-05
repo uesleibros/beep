@@ -1,11 +1,8 @@
-![](./logo.png)
+<div align="center">
+  <img src="./logo.png" height="400" />
+</div>
 
-# Beep — Discord Bot Tool
+# About
 ### Experimental (In Dev)
 
 Beep is a tool to easy way for discord bot developers.
-
-## ToDo
-
-- Programming Language [🚧]
-- Application [❎]
