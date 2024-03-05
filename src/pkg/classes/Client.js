@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const structuredFunctions = require("../helpers/structuredFunctions.js");
 const { GatewayIntentBits, Partials } = require("discord.js");
 const Discord = require("discord.js");
 
@@ -22,6 +23,7 @@ class Client extends Discord.Client {
 		this.prefix = options.prefix || null;
 		this.commands = {};
 		this.listAwaitedCommands = [];
+		this.functions = structuredFunctions();
 		this[_deployEvents](this);
 		this.login(options.token);
 	}

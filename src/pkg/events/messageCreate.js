@@ -37,8 +37,8 @@ module.exports = {
 
 			this.client.listAwaitedCommands.forEach((awc, index) => {
 				if (awc.includes(message.author.id)) {
-				   latestAwaitedCommand = awc;
-				   indexOfLatestAwaitedCommand = index;
+					latestAwaitedCommand = awc;
+					indexOfLatestAwaitedCommand = index;
 				}
 			});
 

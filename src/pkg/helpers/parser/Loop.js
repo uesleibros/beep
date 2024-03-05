@@ -2,9 +2,9 @@ const getFunctionArgs = require("../getFunctionArgs.js");
 const parseArgs = require("../parseArgs.js");
 
 async function Loop(client, message, code, options, interpreter) {
+   let varName;
    if (code.toLowerCase().includes("$for[")) {
       const matches = code.match(/\$for\[(.*?)\]/gi);
-      let varName;
       if (matches) {
          for (const match of matches) {
             const args = await parseArgs(client, message, getFunctionArgs(match), options);

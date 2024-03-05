@@ -1,5 +1,9 @@
 const checkCondition = require("../../functions/conditional/checkCondition.js");
 
+function escapeRegExp(string) {
+   return string.replace(/[.*+?^${}()|[\]\\\n]/g, "\\$&");
+}
+
 async function Condition(client, message, code, options) {
 	if (code.toLowerCase().includes("$if[")) {
 		for (let statement of code.split(/\$if\[/gi).slice(1).reverse()) {
@@ -27,11 +31,7 @@ async function Condition(client, message, code, options) {
 					CONDITION = CONDITION.slice(0, CONDITION.length - 1);
 					elseIfs[CONDITION] = inside.split("\n").slice(1).join("\n");
 
-					function escapeRegExp(string) {
-                  return string.replace(/[.*+?^${}()|[\]\\\n]/g, "\\$&");
-              	}
-
-              	statement = statement.replace(new RegExp(`\\$elseif\\[${escapeRegExp(inside)}\\$(else|endif|elseif)\\1`, "mi"), "");
+					statement = statement.replace(new RegExp(`\\$elseif\\[${escapeRegExp(inside)}\\$(else|endif|elseif)\\1`, "mi"), "");
 				}
 			}
 

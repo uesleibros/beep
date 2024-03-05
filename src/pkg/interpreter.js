@@ -1,8 +1,6 @@
 const Condition = require("./helpers/parser/Condition.js");
 const Loop = require("./helpers/parser/Loop.js");
 const truncate = require("./helpers/truncate.js");
-const structuredFunctions = require("./helpers/structuredFunctions.js");
-const functions = structuredFunctions();
 
 async function interpreter(client, message, code, options, send_message = true) {
 	const commandWaitList = [];
@@ -40,14 +38,14 @@ async function interpreter(client, message, code, options, send_message = true) 
 				return;
 			}
 
-			if (FUNC_NAME in functions) {
+			if (FUNC_NAME in client.functions) {
 				if (["addReactions"].includes(FUNC_NAME)) {
 					commandWaitList.push([FUNC_NAME, match]);
 					code = code.replace(match, '');
 					continue;
 				}
 
-				const BEEP_FUNCTION = require(`${functions[FUNC_NAME]}\\${FUNC_NAME}.js`);
+				const BEEP_FUNCTION = require(`${client.functions[FUNC_NAME]}\\${FUNC_NAME}.js`);
 				const func_result = await BEEP_FUNCTION(code, client, message, match, options);
 				code = func_result.code;
 				error = func_result.error;
@@ -75,7 +73,7 @@ async function interpreter(client, message, code, options, send_message = true) 
 
 		if (commandWaitList.length > 0) {
 			for (const command of commandWaitList) {
-				const BEEP_FUNCTION = require(`${functions[command[0]]}\\${command[0]}.js`);
+				const BEEP_FUNCTION = require(`${client.functions[command[0]]}\\${command[0]}.js`);
 				const func_result = await BEEP_FUNCTION(code, client, customMessage, command[1], options);
 				code = func_result.code;
 				error = func_result.error;

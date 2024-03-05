@@ -9,25 +9,25 @@ function structuredFunctions(folder = "") {
 		const items = fs.readdirSync(functionsFolderPath);
 
 		for (const item of items) {
-		   const itemPath = path.join(functionsFolderPath, item);
-		   const stats = fs.statSync(itemPath);
+			const itemPath = path.join(functionsFolderPath, item);
+			const stats = fs.statSync(itemPath);
 
-		   if (stats.isDirectory()) {
+			if (stats.isDirectory()) {
 				const subFunctions = structuredFunctions(itemPath);
 				for (const functionName in subFunctions) {
-					if (!functions.hasOwnProperty(functionName)) {
+					if (!Object.prototype.hasOwnProperty.call(functions, functionName)) {
 						functions[functionName] = subFunctions[functionName];
 					}
-	         }
-		   } else {
+				}
+			} else {
 				if (path.extname(item) === ".js") {
 					const functionName = path.basename(item, ".js");
 					functions[functionName] = functionsFolderPath;
 				}
-		   }
+			}
 		}
 	} catch (error) {
-		console.error("Erro ao percorrer as pastas:", error);
+		console.error("Error on searching functions:", error);
 	}
 
 	return functions;
