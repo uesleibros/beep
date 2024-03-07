@@ -8,7 +8,7 @@ async function onlyIf(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
 	let error = await FunctionError("onlyIf", ["string:non-op", "string:non-op"], args, false, message);
 
-	if (args.length < 2) {
+	if (!error) {
 		const result = eval(CheckCondition.solve(args[0]))?.toString();
 
 		if (!["true", "false"].includes(result)) {
@@ -16,12 +16,11 @@ async function onlyIf(code, client, message, raw, options) {
 			error = true;
 		}
 
-		if (result) {
+		if (!(result === "true")) {
 			await message.channel.send(args[1]);
 			error = true;
-		} else {
-			code = await FunctionResult(code, raw, '');
 		}
+		code = await FunctionResult(code, raw, '');
 	}
 
 	return { code, error, options };

@@ -40,6 +40,9 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, messa
 				return true;
 			}
 
+			if (!argValue && optional)
+				continue;
+			
 			if (argType === "number" && isNaN(argValue)) {
 				await message.channel.send(`Argument **${i + 1}** for function \`$${name}\` must be a valid number.`);
 				return true;

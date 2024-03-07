@@ -6,13 +6,18 @@ let bot = new Client({ "token": process.env.BOT_TOKEN, "prefix": "!" });
 bot.createCommand(
 	"teste",
 	`
+		$nomention
 		$jsonParse[{
-			"nome": $username,
-			"ola": {
-				"oi": undefined
-			}
+		  "fruits": ["apple", "orange", "banana", "grape"\]
 		}]
 
-		$json[ola]
+		Before reversing:
+		> $json[fruits]
+
+		$jsonArrayReverse[fruits]
+
+		After reversing:
+		> $json[fruits]
 	`
+
 );

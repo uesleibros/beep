@@ -1,9 +1,12 @@
 const truncate = require("../../truncate.js");
 
 function ResolveJSON(json) {
-	const invalidValueRegex = /"([^"]+)":\s*([^,\r\n]+)\s*(?=\s*(?:,|}|$))/g;
+	const invalidValueRegex = /"([^"]+)":\s*(?:([^,\t\r\n\[\]"]+)|([^"]+)")\s*(?=\s*(?:,|}|$))/g;
 
 	let match = json.match(invalidValueRegex);
+
+	if (!match)
+		return json;
 	for (const keyPair of match) {
 		let [key, value] = keyPair.split(":");
 		value = truncate(value).trim();
