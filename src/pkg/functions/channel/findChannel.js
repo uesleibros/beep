@@ -13,7 +13,13 @@ async function findChannel(code, client, message, raw, options) {
 			await message.channel.send("`$findChannel` invalid channel id.");
 			error = true;
 		} else {
-			code = await FunctionResult(code, raw, channel.id);
+			const returnType = args[1] || "id";
+			const getter = {
+				"id": channel.id,
+				"name": channel.name
+			};
+
+			code = await FunctionResult(code, raw, getter[returnType]);
 		}
 	}
 	return { code, error, options };

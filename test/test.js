@@ -7,17 +7,7 @@ bot.createCommand(
 	"teste",
 	`
 		$nomention
-		$jsonParse[{
-		  "fruits": ["apple", "orange", "banana", "grape"\]
-		}]
-
-		Before reversing:
-		> $json[fruits]
-
-		$jsonArrayReverse[fruits]
-
-		After reversing:
-		> $json[fruits]
+		$eval[$message]
 	`
 
 );
