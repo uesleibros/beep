@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function footerIcon(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("footerIcon", ["string:non-op"], args, false, message);
+	const error = await FunctionError("footerIcon", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if ("footer" in options.embed.data)

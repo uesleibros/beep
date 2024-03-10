@@ -17,7 +17,7 @@ function replaceNtimes(input, searchValue, replaceValue, n) {
 
 async function replaceText(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("replaceText", ["string:non-op", "string:non-op", "string:non-op", "number:op"], args, false, message);
+	const error = await FunctionError("replaceText", ["string:non-op", "string:non-op", "string:non-op", "number:op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		const replaceTimes = args[3] ? Number(args[3]) : 1;

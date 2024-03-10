@@ -1,5 +1,8 @@
-const { Events, EmbedBuilder } = require("discord.js");
+const { Events, EmbedBuilder, ActionRowBuilder } = require("discord.js");
 const interpreter = require("../interpreter.js");
+const messageCollectorHandler = require("../handlers/messageCollectorHandler.js");
+const interactionButtonCollectorHandler = require("../handlers/interactionButtonCollectorHandler.js");
+const truncate = require("../helpers/truncate.js");
 
 module.exports = {
 	name: Events.MessageCreate,
@@ -14,39 +17,31 @@ module.exports = {
 		const msg = { mentionAuthor: true };
 		const json = { object: null };
 		const loop = { break: false };
-
+		const listAwaitedCommands = [];
+		const interactionButtonHandler = null;
+		const interactionComponents = [];
+		const curInteractionComponent = 0;
+		const commonMessage = message;
+		const options = { embed, string, variables, envVariables, msg, json, loop, listAwaitedCommands, interactionComponents, curInteractionComponent, interactionButtonHandler, commonMessage };
 
 		if (this.client.prefix) {
 			if (message.content.startsWith(this.client.prefix)) {
 				let former_cmd = '';
-				const ARGS = message.content.slice(this.client.prefix.length).trim().split(/ +/g);
+				const ARGS = message.content.slice(this.client.prefix.length).trim().split(/\s+/);
 				for (const arg of ARGS) {
 					former_cmd += ` ${arg}`;
 					if (former_cmd.trim() in this.client.commands) {
+						if (!this.client.commands[former_cmd.trim()].can_call)
+							continue;
 						const COMMAND_NAME = former_cmd.trim();
-						message.content = message.content.slice(COMMAND_NAME.length + 1).trim();
-						await interpreter(this.client, message, this.client.commands[COMMAND_NAME].code, { embed, string, variables, envVariables, msg, json, loop });
+						options.commonMessage.content = options.commonMessage.content.slice(COMMAND_NAME.length + 1).trim();
+						const botMessage = await interpreter(this.client, options.commonMessage, this.client.commands[COMMAND_NAME].code, options);
+
+						messageCollectorHandler(this.client, options.commonMessage, options);
+						interactionButtonCollectorHandler(this.client, [options.commonMessage, botMessage], options);
 						return;
 					}
 				}
-			}
-		}
-
-		if (this.client.listAwaitedCommands.length > 0) {
-			let latestAwaitedCommand;
-			let indexOfLatestAwaitedCommand;
-
-			this.client.listAwaitedCommands.forEach((awc, index) => {
-				if (awc.includes(message.author.id)) {
-					latestAwaitedCommand = awc;
-					indexOfLatestAwaitedCommand = index;
-				}
-			});
-
-			if (latestAwaitedCommand) {
-				console.log(this.client.listAwaitedCommands);
-				await interpreter(this.client, message, this.client.commands[latestAwaitedCommand[1]].code, { embed, string, variables, envVariables, msg, loop });
-				this.client.listAwaitedCommands.splice(indexOfLatestAwaitedCommand, 1);
 			}
 		}
 	}

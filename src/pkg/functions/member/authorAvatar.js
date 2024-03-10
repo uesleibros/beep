@@ -4,7 +4,7 @@ const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function authorAvatar(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	const error = await FunctionError("authorAvatar", [], args, true, message);
+	const error = await FunctionError("authorAvatar", [], args, true, options.originalCode, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, `https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png?size=256`);

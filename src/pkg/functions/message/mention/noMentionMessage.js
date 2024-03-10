@@ -7,7 +7,7 @@ const truncate = require("../../../helpers/truncate.js");
 async function noMentionMessage(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
 	const customMessage = truncate(message.content.replace(/<@[^>]+>/g, ''));
-	const error = await FunctionError("noMentionMessage", ["number:op"], args, true, message);
+	const error = await FunctionError("noMentionMessage", ["number:op"], args, true, options.originalCode, raw, message);
 
 	if (!error) {
 		let index = args[0] ? Number(args[0]) - 1 : -1;

@@ -6,7 +6,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function and(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("and", ["string:non-op", "string:unlimited"], args, false, message);
+	let error = await FunctionError("and", ["string:unlimited"], args, false, options.originalCode, raw, message);
 	let conditions = [];
 
 	if (!error) {

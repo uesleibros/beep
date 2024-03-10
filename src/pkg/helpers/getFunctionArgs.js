@@ -27,11 +27,11 @@ function getFunctionArgs(function_raw) {
 			isEscaped = true;
 		} else if (bracketDepth > 0) {
 			currentContent += char;
-			//isEscaped = false;
+			isEscaped = false;
 		}
 	}
 
 	return result;
-}
+};
 
 module.exports = getFunctionArgs;

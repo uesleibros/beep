@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function description(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("description", ["string:non-op"], args, false, message);
+	const error = await FunctionError("description", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		options.embed.setDescription(args[0]);

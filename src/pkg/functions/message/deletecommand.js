@@ -4,7 +4,7 @@ const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function deletecommand(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw)
-	const error = await FunctionError("deletecommand", [], args, true, message);
+	const error = await FunctionError("deletecommand", [], args, true, options.originalCode, raw, message);
 
 	if (!error) {
 		try {

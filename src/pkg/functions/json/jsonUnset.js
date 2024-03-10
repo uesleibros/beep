@@ -20,7 +20,7 @@ async function updateValue(obj, path, errorRef, message) {
 
 async function jsonUnset(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("jsonUnset", ["string:unlimited"], args, false, message);
+	let error = await FunctionError("jsonUnset", ["string:unlimited"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if (!options.json.object) {

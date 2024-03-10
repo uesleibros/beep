@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function min(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("min", ["number:unlimited"], args, false, message);
+	const error = await FunctionError("min", ["number:unlimited"], args, false, options.originalCode, raw, message);
 	const numbers = [];
 
 	if (!error) {

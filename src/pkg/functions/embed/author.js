@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function author(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("author", ["string:non-op"], args, false, message);
+	const error = await FunctionError("author", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		options.embed.setAuthor({ name: args[0] });

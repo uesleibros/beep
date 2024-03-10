@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function abs(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("abs", ["number:non-op"], args, false, message);
+	const error = await FunctionError("abs", ["number:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, Math.abs(Number(args[0])));

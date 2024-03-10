@@ -6,7 +6,7 @@ const parseType = require("../../helpers/parseType.js");
 
 async function var_func(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("var", ["string:non-op", "string:op"], args, false, message);
+	const error = await FunctionError("var", ["string:non-op", "string:op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if (args.length > 1) {

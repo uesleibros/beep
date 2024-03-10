@@ -6,7 +6,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 async function randomText(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
 	const texts = [];
-	const error = await FunctionError("randomText", ["string:unlimited"], args, false, message);
+	const error = await FunctionError("randomText", ["string:unlimited"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		for (const text of args) {

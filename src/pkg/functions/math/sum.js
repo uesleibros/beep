@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function sum(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("sum", ["number:non-op", "number:non-op"], args, false, message);
+	const error = await FunctionError("sum", ["number:non-op", "number:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, Number(args[0]) + Number(args[1]));

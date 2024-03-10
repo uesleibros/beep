@@ -6,7 +6,7 @@ const parseType = require("../../helpers/parseType.js");
 
 async function sendMessage(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("sendMessage", ["string:non-op", "boolean:op"], args, false, message);
+	const error = await FunctionError("sendMessage", ["string:non-op", "boolean:op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		const id = await message.channel.send(args[0]);

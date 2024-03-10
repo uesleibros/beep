@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function random(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("random", ["number:non-op", "number:non-op"], args, true, message);
+	const error = await FunctionError("random", ["number:non-op", "number:non-op"], args, true, options.originalCode, raw, message);
 
 	if (!error) {
 		const minCeiled = Math.ceil(Number(args[0] ? args[0] : 0));

@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function toLowerCase(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("toLowerCase", ["string:non-op"], args, false, message);
+	const error = await FunctionError("toLowerCase", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, args[0].toLowerCase());

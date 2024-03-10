@@ -3,6 +3,7 @@ const path = require("node:path");
 const structuredFunctions = require("../helpers/structuredFunctions.js");
 const { GatewayIntentBits, Partials } = require("discord.js");
 const Discord = require("discord.js");
+const Database = require("../database/Database.js");
 
 const _deployEvents = Symbol("deployEvents");
 
@@ -22,14 +23,20 @@ class Client extends Discord.Client {
 		
 		this.prefix = options.prefix || null;
 		this.commands = {};
-		this.listAwaitedCommands = [];
+		this.variables = {};
+		this.database = new Database(path.join(__dirname, "../database/database.db"));
+		//this.database.clearTables();
 		this.functions = structuredFunctions();
 		this[_deployEvents](this);
 		this.login(options.token);
 	}
 
-	createCommand(name, code) {
-		this.commands[name] = { "code": code };
+	createCommand(name, canCall, code) {
+		this.commands[name] = { "code": code, "can_call": canCall };
+	}
+
+	createVariables(variables) {
+		this.variables = variables;
 	}
 
 	[_deployEvents](client) {

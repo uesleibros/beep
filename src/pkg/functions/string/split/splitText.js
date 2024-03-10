@@ -5,7 +5,7 @@ const parseArgs = require("../../../helpers/parseArgs.js");
 
 async function splitText(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("splitText", ["number:non-op"], args, false, message);
+	const error = await FunctionError("splitText", ["number:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, options.string.textSplit[Number(args[0]) - 1]);

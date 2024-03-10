@@ -6,7 +6,7 @@ const parseType = require("../../helpers/parseType.js");
 
 async function addField(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("addField", ["string:non-op", "string:non-op", "boolean:op"], args, false, message);
+	const error = await FunctionError("addField", ["string:non-op", "string:non-op", "boolean:op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		options.embed.addFields({ name: args[0], value: args[1], inline: parseType(args[2]) || false });

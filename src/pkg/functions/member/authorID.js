@@ -4,7 +4,7 @@ const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function authorID(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	const error = await FunctionError("authorID", [], args, true, message);
+	const error = await FunctionError("authorID", [], args, true, options.originalCode, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, message.author.id);

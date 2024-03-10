@@ -14,7 +14,7 @@ function makeTitleCase(str) {
 
 async function toTitleCase(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("toTitleCase", ["string:non-op"], args, false, message);
+	const error = await FunctionError("toTitleCase", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, makeTitleCase(args[0]));

@@ -6,7 +6,7 @@ const parseType = require("../../helpers/parseType.js");
 
 async function json(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("json", ["string:unlimited"], args, false, message);
+	let error = await FunctionError("json", ["string:unlimited"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if (!options.json.object) {

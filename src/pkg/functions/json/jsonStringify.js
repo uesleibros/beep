@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function jsonStringify(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("jsonStringify", [], args, true, message);
+	let error = await FunctionError("jsonStringify", [], args, true, options.originalCode, raw, message);
 
 	if (!error) {
 		if (!options.json.object) {

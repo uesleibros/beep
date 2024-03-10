@@ -9,7 +9,7 @@ async function Emoji(client, emoji) {
 			return emoji
 	} else {
 		const emojiObject = EmojiParser.parse(emoji);
-		if (emojiObject)
+		if (emojiObject && (Array.isArray(emojiObject) && emojiObject.length > 0))
 			return emojiObject[0].unicode;
 	}
 

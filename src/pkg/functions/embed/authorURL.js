@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function authorURL(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("authorURL", ["string:non-op"], args, false, message);
+	const error = await FunctionError("authorURL", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if ("author" in options.embed.data)

@@ -6,7 +6,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function or(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("or", ["string:non-op", "string:unlimited"], args, false, message);
+	let error = await FunctionError("or", ["string:unlimited"], args, false, options.originalCode, raw, message);
 	let conditions = [];
 
 	if (!error) {

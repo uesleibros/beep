@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function checkContains(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("checkContains", ["string:non-op", "string:non-op"], args, false, message);
+	const error = await FunctionError("checkContains", ["string:non-op", "string:non-op"], args, false, options.originalCode, raw, message);
 	let phrases = [];
 	const text = args[0];
 

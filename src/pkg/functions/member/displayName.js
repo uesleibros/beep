@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function displayName(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("displayName", ["string:op"], args, true, message);
+	let error = await FunctionError("displayName", ["string:op"], args, true, options.originalCode, raw, message);
 
 	if (!error) {
 		const userID = args[0] ? await client.users.cache.get(args[0]) : -1;

@@ -1,7 +1,11 @@
 function truncate(text) {
-	text = text.split("\n").map(line => line.trim()).join("\n");
-	text = text.replace(/\/\/.*|\/\*[\s\S]*?\*\//g, '');
-	return text;
+	let result = '';
+
+	for (const value of text.split("\n")) {
+		if (value.length > 0)
+			result += value.trim() + "\n";
+	}
+	return result.trim();
 }
 
 module.exports = truncate;

@@ -4,7 +4,7 @@ const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
 
 async function nomention(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw)
-	const error = await FunctionError("nomention", [], args, true, message);
+	const error = await FunctionError("nomention", [], args, true, options.originalCode, raw, message);
 
 	if (!error) {
 		options.msg.mentionAuthor = false;

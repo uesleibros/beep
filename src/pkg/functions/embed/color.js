@@ -5,10 +5,10 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function color(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("color", ["string:non-op"], args, false, message);
+	const error = await FunctionError("color", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
-		options.embed.setColor(args[0]);
+		options.embed.setColor(parseInt(args[0].replace(/^#/, ''), 16));
 		code = await FunctionResult(code, raw, '');
 	}
 

@@ -19,7 +19,7 @@ function makeSort(arr) {
 
 async function jsonArraySort(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("jsonArraySort", ["string:unlimited"], args, false, message);
+	let error = await FunctionError("jsonArraySort", ["string:unlimited"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if (!options.json.object) {

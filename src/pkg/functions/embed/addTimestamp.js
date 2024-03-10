@@ -4,7 +4,7 @@ const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 
 async function addTimestamp(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
-	const error = await FunctionError("addTimestamp", [], args, true, message);
+	const error = await FunctionError("addTimestamp", [], args, true, code, raw, message);
 
 	if (!error) {
 		options.embed.setTimestamp();

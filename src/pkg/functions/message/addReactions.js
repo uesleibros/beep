@@ -6,7 +6,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function addReactions(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("addReactions", ["string:unlimited"], args, false, message);
+	let error = await FunctionError("addReactions", ["string:unlimited"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		for (const reaction of args) {

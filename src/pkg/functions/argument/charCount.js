@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function charCount(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("charCount", ["string:non-op"], args, false, message);
+	const error = await FunctionError("charCount", ["string:non-op"], args, false, code, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, args[0].length);

@@ -5,7 +5,7 @@ const parseArgs = require("../../../helpers/parseArgs.js");
 
 async function getTextSplitLength(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("getTextSplitLength", [], args, true, message);
+	const error = await FunctionError("getTextSplitLength", [], args, true, options.originalCode, raw, message);
 
 	if (!error)
 		code = await FunctionResult(code, raw, options.string.textSplit.length);

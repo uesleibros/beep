@@ -27,7 +27,7 @@ async function updateValue(obj, path, removedValue, errorRef, message) {
 
 async function jsonArrayShift(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("$jsonArrayShift", ["string:unlimited", "boolean:op"], args, false, message);
+	let error = await FunctionError("$jsonArrayShift", ["string:unlimited", "boolean:op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if (!options.json.object) {

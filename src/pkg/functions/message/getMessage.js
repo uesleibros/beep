@@ -5,7 +5,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function getMessage(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("getMessage", ["string:non-op", "string:non-op", "string:op"], args, false, message);
+	let error = await FunctionError("getMessage", ["string:non-op", "string:non-op", "string:op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		const channel = await client.channels.cache.get(args[0]);

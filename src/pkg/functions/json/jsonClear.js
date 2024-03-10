@@ -6,7 +6,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function jsonClear(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("jsonClear", [], args, true, message);
+	let error = await FunctionError("jsonClear", [], args, true, options.originalCode, raw, message);
 
 	if (!error) {
 		options.json.object = null;

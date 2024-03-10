@@ -5,7 +5,7 @@ const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 async function argsCheck(code, client, message, raw, options) {
 	const args = getFunctionArgs(raw);
 	const messageArgsLength = message.content.trim().length === 0 ? 0 : message.content.trim().split(' ').length;
-	let error = await FunctionError("argsCheck", ["string:non-op", "string:non-op"], args, false, message);
+	let error = await FunctionError("argsCheck", ["string:non-op", "string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		const regex = /<=|>=|<|>|!=|==/g;

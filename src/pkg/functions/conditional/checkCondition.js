@@ -6,7 +6,7 @@ const parseArgs = require("../../helpers/parseArgs.js");
 
 async function checkCondition(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("checkCondition", ["string:non-op"], args, false, message);
+	let error = await FunctionError("checkCondition", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		const conditional = args.join('');
