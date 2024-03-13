@@ -32,6 +32,7 @@ async function for_func(code, client, message, raw, options) {
 			}
 
 			delete options.envVariables[varName];
+			options.loop.break = false;
 			code = await FunctionResult(code, outerLoopCode.trim(), '');
 		}
 	}

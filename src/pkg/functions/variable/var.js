@@ -10,7 +10,7 @@ async function var_func(code, client, message, raw, options) {
 
 	if (!error) {
 		if (args.length > 1) {
-			options.variables[args[0]] = parseType(args[1]);
+			options.variables[args[0]] = args[1];
 			code = await FunctionResult(code, raw, '');
 		} else {
 			if (!(args[0] in options.variables))

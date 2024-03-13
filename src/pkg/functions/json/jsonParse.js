@@ -10,7 +10,7 @@ async function jsonParse(code, client, message, raw, options) {
 
 	if (!error) {
 		try {
-			options.json.object = JSON.parse(ResolveJSON(args[0]));
+			options.json.object = JSON.parse(args[0]);
 		} catch (err) {
 			await message.channel.send(`\`$jsonParse\` error: **${err}**`);
 			error = true;

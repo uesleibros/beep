@@ -7,31 +7,31 @@ const parseType = require("../../../helpers/parseType.js");
 async function updateValue(obj, path, removedValue, errorRef, message) {
 	const key = path.shift();
 	if (!obj.hasOwnProperty(key)) {
-		await message.channel.send(`\`$jsonArrayPop\` unable to traverse the path: **${key}** does not exist.`);
+		await message.channel.send(`\`$jsonArrayRemove\` unable to traverse the path: **${key}** does not exist.`);
 		errorRef.current = true;
 		return;
 	}
 
 	if (path.length === 0) {
-		if (!Array.isArray(obj[key])) {
-			await message.channel.send(`\`$jsonArrayPop\` unable to traverse the path "**${key}**", it's not an array.`);
+		if (Array.isArray(obj[key])) {
+			await message.channel.send(`\`$jsonArrayRemove\` unable to traverse the path "**${key}**", needs to be a index.`);
 			errorRef.current = true;
 			return;
 		}
-		removedValue.current = obj[key][obj[key].length - 1];
-		obj[key].pop();
+		removedValue.current = obj[Number(key)];
+		obj.splice(Number(key), 1);
 	} else {
 		await updateValue(obj[key], path, removedValue, errorRef, message);
 	}
 };
 
-async function jsonArrayPop(code, client, message, raw, options) {
+async function jsonArrayRemove(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	let error = await FunctionError("jsonArrayPop", ["string:unlimited", "boolean:op"], args, false, options.originalCode, raw, message);
+	let error = await FunctionError("jsonArrayRemove", ["string:unlimited", "boolean:op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if (!options.json.object) {
-			await message.channel.send("`$jsonArrayPop` unable to work, try define a json using: `$jsonParse[...]`.");
+			await message.channel.send("`$jsonArrayRemove` unable to work, try define a json using: `$jsonParse[...]`.");
 			error = true;
 		} else {
 			const cJSON = options.json.object;
@@ -51,4 +51,4 @@ async function jsonArrayPop(code, client, message, raw, options) {
 	return { code, error, options };
 };
 
-module.exports = jsonArrayPop;
+module.exports = jsonArrayRemove;

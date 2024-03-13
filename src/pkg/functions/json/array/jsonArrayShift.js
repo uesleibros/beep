@@ -38,7 +38,7 @@ async function jsonArrayShift(code, client, message, raw, options) {
 
          let errorRef = { current: false };
          let removedValue = { current: '' };
-         await updateValue(cJSON, args[1] ? args.toSpliced(args.length - 1, 1) : args, removedValue, errorRef, message);
+         await updateValue(cJSON, typeof parseType(args[args.length - 1]) === "boolean" ? args.toSpliced(args.length - 1, 1) : args.slice(), removedValue, errorRef, message);
          error = errorRef.current;
 
 			if (!error) {

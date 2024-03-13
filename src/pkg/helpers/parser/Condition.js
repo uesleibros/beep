@@ -6,10 +6,13 @@ function escapeRegExp(string) {
 
 async function Condition(client, message, code, options) {
 	if (code.toLowerCase().includes("$if[")) {
-		for (let statement of code.split(/\$if\[/gi).slice(1).reverse()) {
+		for (let statement of code.split(/\$if\[/gi).slice(1)) {
 			const r = code.toLowerCase().split("$if[").length - 1;
-			if (!code.toLowerCase().includes("$endif"))
-				return await message.channel.send("✖ | Conditional `$if` not valid, missing `$endif`.");
+			if (!code.toLowerCase().includes("$endif")) {
+				await message.channel.send("✖ | Conditional `$if` not valid, missing `$endif`.");
+				code = '';
+				return;
+			}
 
 			const everything = code.split(/\$if\[/gi)[r].split(/\$endif/gi)[0];
 			statement = code.split(/\$if\[/gi)[r].split(/\$endif/gi)[0];

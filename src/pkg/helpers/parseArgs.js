@@ -15,17 +15,14 @@ async function parseArgs(client, message, args, options) {
 
 				if (FUNC_NAME in client.functions) {
 					const usingMessage = isInteractionFunction(FUNC_NAME) ? options.interactionMessage : options.commonMessage;
-					const BEEP_FUNCTION = require(`${client.functions[FUNC_NAME]}\\${FUNC_NAME}.js`);
+					const BEEP_FUNCTION = require(`${client.functions[FUNC_NAME]}/${FUNC_NAME}.js`);
 					const func_result = await BEEP_FUNCTION(code, client, usingMessage, match, options);
 					code = func_result.code;
 					error = func_result.error;
 
 					listArgs[idx] = code;
 
-					if (error) return;
-				} else {
-					await message.channel.send(`⚠ | Invalid function \`$${FUNC_NAME}\` is not defined.`);
-					return;
+					if (error) return null;
 				}
 			}
 		}

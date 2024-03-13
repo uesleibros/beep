@@ -1,26 +1,57 @@
 const parseType = require("../parseType.js");
 
 function getLineAndColumn(text, line) {
-  const lines = text.split("\n");
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].includes(line)) {
-      const column = lines[i].indexOf(line) + 1;
-      return [i+1, column];
-    }
-  }
+	const lines = text.split("\n");
+	for (let i = 0; i < lines.length; i++) {
+		if (line.includes(lines[i])) {
+			const column = lines[i].indexOf(line) + 1;
+			return [i+1, column];
+		}
+	}
 
-  return [-1, -1];
+	return [-1, -1];
 }
+
+function verifyClosure(code) {
+	let openings = 0;
+	let closures = 0;
+	let escape = false;
+
+	for (let i = 0; i < code.length; i++) {
+	  const char = code[i];
+	  
+	  if (escape) {
+	      escape = false;
+	      continue;
+	  }
+	  
+	  if (char === "\\") {
+	      escape = true;
+	      continue;
+	  }
+	  
+	  if (char === '[') {
+	      openings++;
+	  } else if (char === ']') {
+	      closures++;
+	  }
+	}
+
+	return openings === closures;
+}
+
 
 async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code, raw, message) {
 	let unlimitedIndex = -1;
 
-	/*if (raw.charAt(raw.slice(name.length + 1)) === "[") {
-		if (raw.charAt(raw.length - 1) !== "]") {
-			await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (Math.abs(raw.length - name.length))}** expected \`]\` on the end.`)
-			return true;
-		}
-	}*/
+	if (!argsValue)
+		return true;
+
+	if (!verifyClosure(raw)) {
+		const [functionLine, functionColumn] = getLineAndColumn(code, raw);
+		await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** not closed properly with \`]\`.`);
+		return true;
+	}
 
 	const argsTypeList = argsType.map(type => {
 		const [argType, prop] = type.split(':');
@@ -28,24 +59,21 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 	});
 
 	if (!canUseWithoutArgs) {
-		if (argsValue?.length === 0) {
+		if (argsValue?.length === 0 && !argsTypeList[0].optional) {
 			const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 			await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** requires at least one argument.`);
 			return true;
 		}
 	}
 
-	/*if (argsType.length !== 0 && canUseWithoutArgs) {
+	if (argsType.length === 0 && canUseWithoutArgs && argsValue.length > 0) {
 		const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 		await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** does not accept any arguments.`);
 		return true;
-	}*/
+	}
 
 	if (argsValue?.length > 0) {
 		for (let i = 0; i < argsType.length; i++) {
-			if (i >= argsTypeList.length) {
-				break;
-			}
 
 			const { argType, optional, unlimited } = argsTypeList[i];
 			const argValue = argsValue[i];
@@ -54,6 +82,8 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 				unlimitedIndex = i;
 				if (await CheckUnlimited(name, argType, argsValue.slice(unlimitedIndex), message, unlimitedIndex, code, raw))
 					return true;
+				if (argsType.slice(unlimitedIndex + 1).length > 0)
+					return await FunctionError(name, argsType.slice(unlimitedIndex + 1), argsValue.slice(argsValue.length - unlimitedIndex), canUseWithoutArgs, code, raw, message)
 			}
 
 			if (argValue === undefined && !optional) {
@@ -100,7 +130,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 	if (unlimitedIndex > -1)
 		unlimitedIndex += argsValue.length;
 
-	if (argsValue?.length > argsType.length + (unlimitedIndex < 0 ? 0 : unlimitedIndex)) {
+	if (argsValue.length > argsType.length + (unlimitedIndex < 0 ? 0 : unlimitedIndex)) {
 		const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 		let sumIndex = 0;
 

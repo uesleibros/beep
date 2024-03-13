@@ -39,16 +39,17 @@ async function InterpreterInteraction(client, messages, code, options) {
 			if (FUNC_NAME in client.functions) {
 				const usingMessage = isInteractionFunction(FUNC_NAME) ? interactionMessage : message;
 
-				const BEEP_FUNCTION = require(`${client.functions[FUNC_NAME]}\\${FUNC_NAME}.js`);
+				const BEEP_FUNCTION = require(`${client.functions[FUNC_NAME]}/${FUNC_NAME}.js`);
 				const func_result = await BEEP_FUNCTION(code, client, usingMessage, match, options);
 				code = func_result.code;
 				error = func_result.error;
 				options = func_result.options;
 
+				if (FUNC_NAME === "for") {
+					return await InterpreterInteraction(client, message, code, options);
+				}
+
 				if (error) return;
-			} else {
-				await message.channel.send(`⚠ \`${FUNC_NAME}\` is not defined.`);
-				return;
 			}
 		}
 	}

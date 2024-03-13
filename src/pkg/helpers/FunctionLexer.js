@@ -9,18 +9,20 @@ function FunctionLexer(function_raw) {
 
 		if (char === '[') {
 			currentContent += char;
-			bracketDepth++;
+			if (!isEscaped)
+				bracketDepth++;
 		} else if (char === ']') {
-			bracketDepth--;
+			if (!isEscaped)
+				bracketDepth--;
 			currentContent += char;
 
-            if (bracketDepth === 0) {
-                result.push(currentContent.trim());
-    			currentContent = '';
-            }
+			if (bracketDepth === 0 && !isEscaped) {
+				result.push(currentContent.trim());
+				currentContent = '';
+			}
 		} else if (char === ';' && bracketDepth === 1 && !isEscaped) {
 			currentContent += char;
-		} else if (char === "\\" && !isEscaped) {
+		} else if (char === "\\") {
 			isEscaped = true;
 		} else if (bracketDepth > 0) {
 			currentContent += char;

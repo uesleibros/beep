@@ -16,7 +16,7 @@ async function json(code, client, message, raw, options) {
 			let cJSON = options.json.object;
 
 			for (key of args) {
-				cJSON = cJSON[isNaN(key) ? key : Number(key)];
+				cJSON = cJSON[isNaN(key) ? key : Number(key) - 1];
 			}
 
 			if (typeof cJSON === "object" || Array.isArray(cJSON))

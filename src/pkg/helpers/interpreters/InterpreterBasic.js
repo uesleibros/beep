@@ -38,13 +38,13 @@ async function InterpreterBasic(client, message, code, options) {
 					continue;
 				}
 
-				const BEEP_FUNCTION = require(`${client.functions[FUNC_NAME]}\\${FUNC_NAME}.js`);
+				const BEEP_FUNCTION = require(`${client.functions[FUNC_NAME]}/${FUNC_NAME}.js`);
 				const func_result = await BEEP_FUNCTION(code, client, message, match, options);
 				code = func_result.code;
 				error = func_result.error;
 				options = func_result.options;
 
-				if (FUNC_NAME === "for") {
+				if (["for"].includes(FUNC_NAME)) {
 					return await InterpreterBasic(client, message, code, options);
 				}
 
