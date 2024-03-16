@@ -18,8 +18,8 @@ async function updateValue(obj, path, removedValue, errorRef, message) {
 			errorRef.current = true;
 			return;
 		}
-		removedValue.current = obj[Number(key)];
-		obj.splice(Number(key), 1);
+		removedValue.current = obj[Number(key) - 1];
+		obj.splice(Number(key) - 1, 1);
 	} else {
 		await updateValue(obj[key], path, removedValue, errorRef, message);
 	}

@@ -1,7 +1,6 @@
 const Client = require("../src/pkg/classes/Client.js");
 require("dotenv").config();
 
-
 let bot = new Client({ "token": process.env.BOT_TOKEN, "prefix": "!" });
 
 function GenerateFunctionTree() {
@@ -13,15 +12,16 @@ function GenerateFunctionTree() {
 		if (!(path[0] in trees)) {
 			trees[path[0]] = [];
 		}
-		trees[path[0]].push('- '.repeat(2) + name + "\n");
+		trees[path[0]].push("\\$" + name + "\n");
 	}
 
 	for (const tree of Object.keys(trees)) {
-		result += "- **" + tree.toUpperCase() + "**\n" + trees[tree].join('');
+		result += trees[tree].join('');
 	}
 
 	return result;
 }
+
 
 bot.createCommand(
 	"teste",
@@ -29,7 +29,7 @@ bot.createCommand(
 	`
 		$addButton[no;bt1;Botão 1;primary;no;]
 
-		$onInteractionButton[
+		$onInteraction[
 			$if[$customID==bt1]
 				$editButton[bt1;no;$randomString[5];primary;no;]
 			$endif
@@ -44,7 +44,7 @@ bot.createCommand(
 	`
 		${GenerateFunctionTree()}
 	`
-)
+);
 
 bot.createCommand(
 	"eval",

@@ -1,6 +1,9 @@
 const EmojiParser = require("discord-emojis-parser");
 
 async function Emoji(client, emoji) {
+	if (!emoji)
+		return undefined;
+	
 	const regexCustomEmoji = /<:(.*?):(\d+)>/;
 	const match = emoji.match(regexCustomEmoji);
 

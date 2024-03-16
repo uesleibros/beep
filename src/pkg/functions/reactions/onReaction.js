@@ -3,15 +3,16 @@ const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
-async function customID(code, client, message, raw, options) {
-	const args = getFunctionArgs(raw);
-	const error = await FunctionError("customID", [], args, true, options.originalCode, raw, message);
+async function onReaction(code, client, message, raw, options) {
+	const args = getFunctionArgs(raw)
+	const error = await FunctionError("onReaction", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
-		code = await FunctionResult(code, raw, message?.customId);
+		options.reactionHandler = args[0];
+		code = await FunctionResult(code, raw, '');
 	}
 
 	return { code, error, options };
 };
 
-module.exports = customID;
+module.exports = onReaction;

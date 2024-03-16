@@ -27,14 +27,14 @@ function FunctionLexer(function_raw) {
 		} else if (bracketDepth > 0) {
 			currentContent += char;
 			isEscaped = false;
-        } else if (char === '$') {
+        } else if (char === '$' && !isEscaped) {
         	if (currentContent.length > 1) {
         		result.push(currentContent.trim());
         		currentContent = '';
         	}
             currentContent += char;
 		} else {
-            if (currentContent.charAt(0) === "$") {
+            if (currentContent.charAt(0) === "$" && !isEscaped) {
             	const regex = /[^a-zA-Z0-9\[\]]/;
 
             	if (!regex.test(char)) {

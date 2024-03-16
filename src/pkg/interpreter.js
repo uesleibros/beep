@@ -22,8 +22,15 @@ async function interpreter(client, message, code, options, send_message = true) 
 		if (options.interactionComponents.length > 0)
 			responseObject.components = [ ...options.interactionComponents ];
 
-		if (code.trim().length > 0 || Object.keys(options.embed.data).length > 0)
-			customMessage = await message.channel.send(responseObject);
+		if (code.trim().length > 0 || Object.keys(options.embed.data).length > 0 || options.interactionComponents.length > 0) {
+			try {
+				customMessage = await message.channel.send(responseObject);
+			} catch (err) {
+				await message.channel.send("Beep Parser error: **" + err + "**");
+				error = true;
+				return;
+			}
+		}
 	}
 
 	if (commandWaitList.length > 0) {
@@ -37,7 +44,7 @@ async function interpreter(client, message, code, options, send_message = true) 
 			if (error) return;
 		}
 	}
-	return customMessage;
+	options.botMessage = customMessage;
 }
 
 module.exports = interpreter;

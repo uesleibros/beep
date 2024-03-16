@@ -7,7 +7,7 @@ function messageCollectorHandler(client, message, options) {
 
 		const collector = message.channel.createMessageCollector({
 			filter: (m) => m.author.id === message.author.id && m.channel.id === message.channel.id,
-			time: 10_000
+			time: 60_000
 		});
 
 		options.listAwaitedCommands.forEach((awc, index) => {

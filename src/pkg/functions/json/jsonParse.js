@@ -1,6 +1,5 @@
 const FunctionError = require("../../helpers/errors/FunctionError.js");
 const FunctionResult = require("../../helpers/result/FunctionResult.js");
-const ResolveJSON = require("../../helpers/parser/json/ResolveJSON");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
