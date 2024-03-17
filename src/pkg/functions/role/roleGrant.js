@@ -9,7 +9,7 @@ async function roleGrant(code, client, message, raw, options) {
 	let error = await FunctionError("roleGrant", ["string:non-op", "string:unlimited"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
-		const user = await client.users.fetch(args[0]).catch(() => null);
+		const user = await message.guild.members.cache.find((m) => m.id === args[0]);
 
 		if (!user) {
 			await CustomFunctionError("roleGrant", args, 0, message, code, raw, `Invalid user id: ${args[0]}`);
@@ -23,9 +23,9 @@ async function roleGrant(code, client, message, raw, options) {
 				} else {
 					try {
 						if (argsSpliced[argIndex].charAt(0) === "+")
-							await message.member.roles.add(argsSpliced[argIndex].slice(1));
+							await user.roles.add(argsSpliced[argIndex].slice(1));
 						else
-							await message.member.roles.remove(argsSpliced[argIndex].slice(1));
+							await user.roles.remove(argsSpliced[argIndex].slice(1));
 					} catch (err) {
 						await CustomFunctionError("roleGrant", args, argIndex + 1, message, code, raw, `Error: \`${err}\`.`);
 						error = true;

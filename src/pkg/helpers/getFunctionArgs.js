@@ -15,13 +15,13 @@ function getFunctionArgs(function_raw) {
 		} else if (char === ']') {
 			bracketDepth--;
 			if (bracketDepth === 0) {
-				result.push(currentContent);
+				result.push(currentContent.replace(/<@&?(\d+)>/g, (match, id) => id));
 				currentContent = '';
 			} else {
 				currentContent += char;
 			}
 		} else if (char === ';' && bracketDepth === 1 && !isEscaped) {
-			result.push(currentContent);
+			result.push(currentContent.replace(/<@&?(\d+)>/g, (match, id) => id));
 			currentContent = '';
 		} else if (char === "\\" && !isEscaped) {
 			isEscaped = true;
