@@ -60,5 +60,37 @@ bot.createVariables({
 	money: 0,
 	xp: 0,
 	fichas: 0,
-	mamaco: 20
+	mamaco: 20,
+	backgrounds: `
+		{"backgrounds":[
+
+		{"titulo":"Default",
+		"descricao":"*Background padrão*",
+		"imagem":"https://cdn.discordapp.com/attachments/1161080426312519690/1202042588744667206/22_Sem_Titulo-4.png",
+		"preco":"N.A"},
+
+		{"titulo":"Mint",
+		"descricao":"*Refrescancia é o que define este background*",
+		"imagem":"https://cdn.discordapp.com/attachments/1161080426312519690/1202042589969387541/22_Sem_Titulo-1.png",
+		"preco":"8600"},
+
+		{"titulo":"Attractive Red",
+		"descricao":"*Um belo e atraente fundo vermelho*",
+		"imagem":"https://cdn.discordapp.com/attachments/1161080426312519690/1202042589524529233/22_Sem_Titulo-2.png",
+		"preco":"13200"},
+
+
+		{"titulo":"Vibrations",
+		"descricao":"*Vibrações estão por todos os lados, inclusive por aqui*",
+		"imagem":"https://cdn.discordapp.com/attachments/1161080426312519690/1202042591194132501/22_Sem_Titulo.png",
+		"preco":"24300"},
+
+		{"titulo":"Purple Peace",
+		"descricao":"*A mais pura paz na cor roxa*",
+		"imagem":"https://cdn.discordapp.com/attachments/1161080426312519690/1202042589197377587/22_Sem_Titulo-3.png",
+		"preco":"48000"}
+
+
+		]}
+	`
 });

@@ -8,7 +8,7 @@ const parseType = require("../../../helpers/parseType.js");
 
 async function addButton(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("addButton", ["boolean:non-op", "string:non-op", "string:non-op", "string:non-op", "boolean:non-op", "string:non-op"], args, false, options.originalCode, raw, message);
+	let error = await FunctionError("addButton", ["boolean:non-op", "string:non-op", "string:non-op", "string:non-op", "boolean:non-op", "string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		let existsButton = false;

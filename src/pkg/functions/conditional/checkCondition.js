@@ -11,10 +11,11 @@ async function checkCondition(code, client, message, raw, options) {
 
 	if (!error) {
 		const conditional = args.join('');
+		let result;
 		try {
-			const result = eval(CheckCondition.solve(conditional))?.toString();
+			result = eval(CheckCondition.solve(conditional))?.toString();
 		} catch (_) {
-			const result = CheckCondition.solve(conditional)?.toString();
+			result = CheckCondition.solve(conditional)?.toString();
 		}
 
 		if (!["true", "false"].includes(result)) {
