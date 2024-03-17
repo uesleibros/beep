@@ -17,15 +17,15 @@ async function roleGrant(code, client, message, raw, options) {
 		} else {
 			let argsSpliced = args.toSpliced(0, 1);
 			for (let argIndex = 0; argIndex < argsSpliced.length; argIndex++) {
-				if (["+", "-"].includes(argsSpliced[argIndex].charAt(0))) {
+				if (!["+", "-"].includes(argsSpliced[argIndex].charAt(0))) {
 					await CustomFunctionError("roleGrant", args, argIndex + 1, message, code, raw, `Missing (+/-) on starting of role id: \`${argsSpliced[argIndex]}\`.`);
 					error = true;
 				} else {
 					try {
 						if (argsSpliced[argIndex].charAt(0) === "+")
-							await message.member.roles.add(argsSpliced[argIndex].slice(0));
+							await message.member.roles.add(argsSpliced[argIndex].slice(1));
 						else
-							await message.member.roles.remove(argsSpliced[argIndex].slice(0));
+							await message.member.roles.remove(argsSpliced[argIndex].slice(1));
 					} catch (err) {
 						await CustomFunctionError("roleGrant", args, argIndex + 1, message, code, raw, `Error: \`${err}\`.`);
 						error = true;
