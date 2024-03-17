@@ -11,7 +11,6 @@ function interactionCollectorHandler(client, messages, options) {
 		});
 
 		collector.on("collect", async (interaction) => {
-			console.log(interaction)
 			if (options.interactionHandler) {
 				options.embed = new EmbedBuilder();
 				await InterpreterInteraction(client, [authorMessage, interaction], options.interactionHandler, options);

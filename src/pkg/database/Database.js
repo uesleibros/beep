@@ -3,7 +3,7 @@ const sqlite3 = require("sqlite3").verbose();
 const _createTables = Symbol("deployEvents");
 
 class Database {
-	constructor(databasePath) {
+	constructor(databasePath, client) {
 		this.db = new sqlite3.Database(databasePath, (err) => {
 			if (err) {
 				console.error("Error on opening database:", err.message);
@@ -12,6 +12,7 @@ class Database {
 				this[_createTables]();
 			}
 		});
+		this.client = client;
 	}
 
 	[_createTables]() {
@@ -61,15 +62,23 @@ class Database {
 	}
 
 	async getGlobalUserVar(variableName, id) {
-		return new Promise((resolve, reject) => {
-			this.db.get("SELECT value FROM userGlobalTable WHERE id = ? AND variableName = ?", [id, variableName], (err, row) => {
+		return new Promise(async (resolve, reject) => {
+			this.db.get("SELECT value FROM userGlobalTable WHERE id = ? AND variableName = ?", [id, variableName], async (err, row) => {
 				if (err) {
 					reject(err);
 				} else {
 					if (row) {
 						resolve(row.value);
 					} else {
-						resolve(null);
+						if (Object.keys(this.client.variables).includes(variableName)) {
+							await this.setGlobalUserVar(variableName, this.client.variables[variableName], id);
+							setTimeout(async () => {
+								const newValue = await this.getGlobalUserVar(variableName, id);
+								resolve(newValue);
+							}, 10);
+						} else {
+							resolve(null);
+						}
 					}
 				}
 			});
@@ -77,28 +86,35 @@ class Database {
 	}
 
 	async setGlobalUserVar(variableName, value, id) {
-		return new Promise(async (resolve, reject) => {
-			if (!await this.getGlobalUserVar(variableName, id)) {
-				const stmt = this.db.prepare("INSERT INTO userGlobalTable (id, variableName, value) VALUES (?, ?, ?)");
-				stmt.run(id, variableName, value, function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-				stmt.finalize();
-			} else {
-				const stmt = this.db.prepare("UPDATE userGlobalTable SET value = ? WHERE id = ? AND variableName = ?");
-				stmt.run(value, id, variableName, function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-				stmt.finalize();
-			}
+		return new Promise((resolve, reject) => {
+			this.db.get("SELECT value FROM userGlobalTable WHERE id = ? AND variableName = ?", [id, variableName], async (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+
+				if (!row) {
+					const stmt = this.db.prepare("INSERT INTO userGlobalTable (id, variableName, value) VALUES (?, ?, ?)");
+					stmt.run(id, variableName, value, function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+					stmt.finalize();
+				} else {
+					const stmt = this.db.prepare("UPDATE userGlobalTable SET value = ? WHERE id = ? AND variableName = ?");
+					stmt.run(value, id, variableName, function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+					stmt.finalize();
+				}
+			});
 		});
 	}
 
@@ -115,46 +131,63 @@ class Database {
 	}
 
 	async getUserGuildVar(variableName, guildId, id) {
-		return new Promise((resolve, reject) => {
-			this.db.get("SELECT value FROM userGuildTable WHERE id = ? AND guildId = ? AND variableName = ?", [id, guildId, variableName], (err, row) => {
+		return new Promise(async (resolve, reject) => {
+			this.db.get("SELECT value FROM userGuildTable WHERE id = ? AND guildId = ? AND variableName = ?", [id, guildId, variableName], async (err, row) => {
 				if (err) {
 					reject(err);
 				} else {
 					if (row) {
 						resolve(row.value);
 					} else {
-						resolve(null);
+						if (Object.keys(this.client.variables).includes(variableName)) {
+							await this.setUserGuildVar(variableName, this.client.variables[variableName], guildId, id);
+							setTimeout(async () => {
+								const newValue = await this.getUserGuildVar(variableName, guildId, id);
+								resolve(newValue);
+							}, 10);
+						} else {
+							resolve(null);
+						}
 					}
 				}
 			});
 		});
 	}
 
+
 	async setUserGuildVar(variableName, value, guildId, id) {
-		return new Promise(async (resolve, reject) => {
-			if (!await this.getUserGuildVar(variableName, guildId, id)) {
-				const stmt = this.db.prepare("INSERT INTO userGuildTable (id, guildId, variableName, value) VALUES (?, ?, ?, ?)");
-				stmt.run(id, guildId, variableName, value, function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-				stmt.finalize();
-			} else {
-				const stmt = this.db.prepare("UPDATE userGuildTable SET value = ? WHERE id = ? AND guildId = ? AND variableName = ?");
-				stmt.run(value, id, guildId, variableName, function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-				stmt.finalize();
-			}
+		return new Promise((resolve, reject) => {
+			this.db.get("SELECT value FROM userGuildTable WHERE id = ? AND guildId = ? AND variableName = ?", [id, guildId, variableName], async (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+
+				if (!row) {
+					const stmt = this.db.prepare("INSERT INTO userGuildTable (id, guildId, variableName, value) VALUES (?, ?, ?, ?)");
+					stmt.run(id, guildId, variableName, value, function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+					stmt.finalize();
+				} else {
+					const stmt = this.db.prepare("UPDATE userGuildTable SET value = ? WHERE id = ? AND guildId = ? AND variableName = ?");
+					stmt.run(value, id, guildId, variableName, function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+					stmt.finalize();
+				}
+			});
 		});
 	}
+
 
 	async removeUserGuildVar(variableName, guildId, id) {
 		return new Promise((resolve, reject) => {
@@ -169,15 +202,23 @@ class Database {
 	}
 
 	async getChannelVar(variableName, channelId) {
-		return new Promise((resolve, reject) => {
-			this.db.get("SELECT value FROM channelTable WHERE channelId = ? AND variableName = ?", [channelId, variableName], (err, row) => {
+		return new Promise(async (resolve, reject) => {
+			this.db.get("SELECT value FROM channelTable WHERE variableName = ? AND channelId = ?", [variableName, channelId], async (err, row) => {
 				if (err) {
 					reject(err);
 				} else {
 					if (row) {
 						resolve(row.value);
 					} else {
-						resolve(null);
+						if (Object.keys(this.client.variables).includes(variableName)) {
+							await this.setChannelVar(variableName, this.client.variables[variableName], channelId);
+							setTimeout(async () => {
+								const newValue = await this.getChannelVar(variableName, channelId);
+								resolve(newValue);
+							}, 10);
+						} else {
+							resolve(null);
+						}
 					}
 				}
 			});
@@ -186,29 +227,37 @@ class Database {
 
 	async setChannelVar(variableName, value, channelId) {
 		return new Promise(async (resolve, reject) => {
-			if (!await this.getChannelVar(variableName, channelId)) {
-				const stmt = this.db.prepare("INSERT INTO channelTable (channelId, variableName, value) VALUES (?, ?, ?)");
-				stmt.run(channelId, variableName, value, function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-				stmt.finalize();
-			} else {
-				const stmt = this.db.prepare("UPDATE channelTable SET value = ? WHERE channelId = ? AND variableName = ?");
-				stmt.run(value, channelId, variableName, function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-				stmt.finalize();
-			}
+			this.db.get("SELECT value FROM channelTable WHERE channelId = ? AND variableName = ?", [channelId, variableName], async (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+
+				if (!row) {
+					const stmt = this.db.prepare("INSERT INTO channelTable (channelId, variableName, value) VALUES (?, ?, ?)");
+					stmt.run(channelId, variableName, value, function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+					stmt.finalize();
+				} else {
+					const stmt = this.db.prepare("UPDATE channelTable SET value = ? WHERE channelId = ? AND variableName = ?");
+					stmt.run(value, channelId, variableName, function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+					stmt.finalize();
+				}
+			});
 		});
 	}
+
 
 	async removeChannelVar(variableName, channelId) {
 		return new Promise((resolve, reject) => {
@@ -240,27 +289,34 @@ class Database {
 
 	async setGuildVar(variableName, value, guildId) {
 		return new Promise(async (resolve, reject) => {
-			if (!await this.getGuildVar(variableName, guildId)) {
-				const stmt = this.db.prepare("INSERT INTO guildTable (guildId, variableName, value) VALUES (?, ?, ?)");
-				stmt.run(guildId, variableName, value, function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-				stmt.finalize();
-			} else {
-				const stmt = this.db.prepare("UPDATE guildTable SET value = ? WHERE guildId = ? AND variableName = ?");
-				stmt.run(value, guildId, variableName, function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve();
-					}
-				});
-				stmt.finalize();
-			}
+			this.db.get("SELECT value FROM guildTable WHERE guildId = ? AND variableName = ?", [guildId, variableName], async (err, row) => {
+				if (err) {
+					reject(err);
+					return;
+				}
+
+				if (!row) {
+					const stmt = this.db.prepare("INSERT INTO guildTable (guildId, variableName, value) VALUES (?, ?, ?)");
+					stmt.run(guildId, variableName, value, function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+					stmt.finalize();
+				} else {
+					const stmt = this.db.prepare("UPDATE guildTable SET value = ? WHERE guildId = ? AND variableName = ?");
+					stmt.run(value, guildId, variableName, function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve();
+						}
+					});
+					stmt.finalize();
+				}
+			});
 		});
 	}
 

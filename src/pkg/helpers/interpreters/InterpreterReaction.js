@@ -45,9 +45,8 @@ async function InterpreterReaction(client, messages, code, options) {
 				error = func_result.error;
 				options = func_result.options;
 
-				if (FUNC_NAME === "for") {
-					return await InterpreterReaction(client, message, code, options);
-				}
+				if (func_result.returnHere)
+					return;
 
 				if (error) return;
 			}

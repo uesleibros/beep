@@ -24,7 +24,15 @@ async function interpreter(client, message, code, options, send_message = true) 
 
 		if (code.trim().length > 0 || Object.keys(options.embed.data).length > 0 || options.interactionComponents.length > 0) {
 			try {
-				customMessage = await message.channel.send(responseObject);
+				if (!options.msg.reply) {
+					customMessage = await message.channel.send(responseObject);
+				} else {
+					const replyTime = options.msg.replyIn || 0;
+					setTimeout(async () => {
+						customMessage = await message.reply(responseObject)
+					}, replyTime);
+					
+				}
 			} catch (err) {
 				await message.channel.send("Beep Parser error: **" + err + "**");
 				error = true;

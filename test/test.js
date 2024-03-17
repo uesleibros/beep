@@ -59,5 +59,6 @@ bot.createCommand(
 bot.createVariables({
 	money: 0,
 	xp: 0,
-	fichas: 0
+	fichas: 0,
+	mamaco: 20
 });

@@ -1,4 +1,5 @@
 const FunctionError = require("../../helpers/errors/FunctionError.js");
+const CustomFunctionError = require("../../helpers/errors/CustomFunctionError.js");
 const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const InterpreterBasic = require("../../helpers/interpreters/InterpreterBasic.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
@@ -15,7 +16,7 @@ async function for_func(code, client, message, raw, options) {
 		const endforCounts = code.match(/\$endfor/gi) || [];
 
 		if (forCounts.length > endforCounts.length) {
-			await message.channel.send("`$for` missing `$endfor` to: " + Math.abs(forCounts.length - endforCounts.length) + " $for.");
+			await CustomFunctionError("for", args, -1, message, code, raw, "Missing `$endfor` keyword.");
 			error = true;
 		} else {
 			options.envVariables[varName] = 0;
@@ -36,7 +37,7 @@ async function for_func(code, client, message, raw, options) {
 			code = await FunctionResult(code, outerLoopCode.trim(), '');
 		}
 	}
-	return { code, error, options };
+	return { code, error, options, returnHere: true };
 }
 
 module.exports = for_func;

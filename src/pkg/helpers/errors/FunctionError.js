@@ -138,6 +138,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 			if (argIndex < argsType.length)
 				sumIndex += argsValue[argIndex].length + 1;
 		}
+
 		await message.channel.send(`Too many arguments provided for function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}**.`);
 		return true;
 	}

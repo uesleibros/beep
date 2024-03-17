@@ -4,7 +4,7 @@ const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
 async function reactionInfo(code, client, message, raw, options) {
-	const args = getFunctionArgs(raw);
+	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
 	const error = await FunctionError("reactionInfo", ["string:non-op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {

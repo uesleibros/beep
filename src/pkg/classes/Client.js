@@ -24,7 +24,7 @@ class Client extends Discord.Client {
 		this.prefix = options.prefix || null;
 		this.commands = {};
 		this.variables = {};
-		this.database = new Database(path.join(__dirname, "../database/database.db"));
+		this.database = new Database(path.join(__dirname, "../database/database.db"), this);
 		this.database.clearTables();
 		this.functions = structuredFunctions();
 		this[_deployEvents](this);

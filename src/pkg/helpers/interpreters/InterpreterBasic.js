@@ -44,9 +44,8 @@ async function InterpreterBasic(client, message, code, options) {
 				error = func_result.error;
 				options = func_result.options;
 
-				if (["for"].includes(FUNC_NAME)) {
-					return await InterpreterBasic(client, message, code, options);
-				}
+				if (func_result.returnHere)
+					return [code, error, commandWaitList];
 
 				if (error) return [code, error, commandWaitList];
 			}

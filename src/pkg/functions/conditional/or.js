@@ -1,4 +1,5 @@
 const FunctionError = require("../../helpers/errors/FunctionError.js");
+const CustomFunctionError = require("../../helpers/errors/CustomFunctionError.js");
 const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const CheckCondition = require("../../helpers/CheckCondition.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
@@ -11,9 +12,14 @@ async function or(code, client, message, raw, options) {
 
 	if (!error) {
 		for (const condition of args) {
-			conditions.push(eval(CheckCondition.solve(condition)));
-			if (!["true", "false"].includes(conditions[conditions.length - 1].toString())) {
-				await message.channel.send(`\`$or\` is invalid, check conditional: ${condition}.`);
+			try {
+				conditions.push(eval(CheckCondition.solve(condition)));
+			} catch (_) {
+				conditions.push(CheckCondition.solve(condition));
+			}
+			
+			if (!["true", "false"].includes(conditions[conditions.length - 1]?.toString())) {
+				await CustomFunctionError("or", args, -1, message, code, raw, `Invalid check conditional: **${condition}**.`);
 				error = true;
 			}
 		}
