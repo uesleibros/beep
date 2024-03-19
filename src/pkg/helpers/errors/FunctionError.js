@@ -40,9 +40,10 @@ function verifyClosure(code) {
 	return openings === closures;
 }
 
-
+let endUnlimitedIndex = 0;
 async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code, raw, message) {
 	let unlimitedIndex = -1;
+	endUnlimitedIndex = 0;
 
 	if (!argsValue)
 		return true;
@@ -60,7 +61,6 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 
 	if (!canUseWithoutArgs) {
 		if (argsValue?.length === 0 && !argsTypeList[0].optional) {
-			console.log(code)
 			const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 			await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** requires at least one argument.`);
 			return true;
@@ -84,7 +84,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 				if (await CheckUnlimited(name, argType, argsValue.slice(unlimitedIndex), message, unlimitedIndex, code, raw))
 					return true;
 				if (argsType.slice(unlimitedIndex + 1).length > 0)
-					return await FunctionError(name, argsType.slice(unlimitedIndex + 1), argsValue.slice(argsValue.length - unlimitedIndex), canUseWithoutArgs, code, raw, message)
+					return await FunctionError(name, argsType.slice(unlimitedIndex + 1), argsValue.slice(endUnlimitedIndex), canUseWithoutArgs, code, raw, message);
 			}
 
 			if (argValue === undefined && !optional) {
@@ -150,6 +150,9 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 async function CheckUnlimited(name, argType, argsValue, message, startIndex, code, raw) {
 	for (let i = 0; i < argsValue.length; i++) {
 		const argValue = argsValue[i];
+
+		if (typeof parseType(argValue) === argType)
+			endUnlimitedIndex += 1;
 
 		if (argType === "number") {
 			if (isNaN(argValue)) {
