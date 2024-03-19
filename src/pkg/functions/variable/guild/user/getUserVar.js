@@ -12,13 +12,12 @@ async function getUserVar(code, client, message, raw, options) {
 	if (!error) {
 		const user = await client.users.fetch(args[1] || message.author.id).catch(() => null);
 		if (!user) {
-			await CustomFunctionError("getUserVar", args, 0, message, code, raw, `Invalid user id: \`${args[1]}\``);
+			await CustomFunctionError("getUserVar", args, 1, message, code, raw, `Invalid user id: "${args[1]}".`);
 			error = true;
 		} else {
-			const res = await client.database.getUserGuildVar(args[0], message.guildId, user.id);
-
+			const res = await client.database.getTableValue("userGuildTable", { variableName: args[0], guildId: message.guildId, id: user.id });
 			if (!res) {
-				await CustomFunctionError("getUserVar", args, 0, message, code, raw, `Variable \`${args[0]}\` is not declared.`)
+				await CustomFunctionError("getUserVar", args, 0, message, code, raw, `Variable "${args[0]}" is not declared.`);
 				error = true;
 			} else {
 				code = await FunctionResult(code, raw, res);

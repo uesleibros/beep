@@ -1,4 +1,5 @@
 const FunctionError = require("../../../../helpers/errors/FunctionError.js");
+const CustomFunctionError = require("../../../../helpers/errors/CustomFunctionError.js");
 const FunctionResult = require("../../../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../../../helpers/parseArgs.js");
@@ -11,10 +12,10 @@ async function setUserVar(code, client, message, raw, options) {
 	if (!error) {
 		const user = await client.users.fetch(args[2] || message.author.id).catch(() => null);
 		if (!user) {
-			await message.channel.send("`setUserVar` invalid user id");
+			await CustomFunctionError("setUserVar", args, 2, message, code, raw, `Provided invalid user id: "${args[2]}"`);
 			error = true;
 		} else {
-			await client.database.setUserGuildVar(args[0], args[1], message.guildId, user.id);
+			await client.database.setTableValue("userGuildTable", { value: args[1], variableName: args[0], guildId: message.guildId, id: user.id });
 			code = await FunctionResult(code, raw, '');
 		}
 	}

@@ -1,4 +1,5 @@
 const FunctionError = require("../../../helpers/errors/FunctionError.js");
+const CustomFunctionError = require("../../../helpers/errors/CustomFunctionError.js");
 const FunctionResult = require("../../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../../helpers/parseArgs.js");
@@ -11,12 +12,12 @@ async function getVar(code, client, message, raw, options) {
 	if (!error) {
 		const user = await client.users.fetch(args[1]).catch(() => null);
 		if (!user) {
-			await message.channel.send("`getVar` invalid user id.");
+			await CustomFunctionError("getVar", args, 1, message, code, raw, `Invalid user id: "${args[1]}".`);
 			error = true;
 		} else {
-			const res = await client.database.getGlobalUserVar(args[0], args[1]);
+			const res = await client.database.getTableValue("userGlobalTable", { variableName: args[0], id: args[1] });
 			if (!res) {
-				await message.channel.send("`$getVar` Failed to find variable named '" + args[0] + "'");
+				await CustomFunctionError("getVar", args, 0, message, code, raw, `Variable "${args[0]}" is not declared.`);
 				error = true;
 			} else {
 				code = await FunctionResult(code, raw, res);

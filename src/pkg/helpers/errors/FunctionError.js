@@ -3,7 +3,7 @@ const parseType = require("../parseType.js");
 function getLineAndColumn(text, line) {
 	const lines = text.split("\n");
 	for (let i = 0; i < lines.length; i++) {
-		if (line.includes(lines[i])) {
+		if (lines[i].includes(line)) {
 			const column = lines[i].indexOf(line) + 1;
 			return [i+1, column];
 		}
@@ -60,6 +60,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 
 	if (!canUseWithoutArgs) {
 		if (argsValue?.length === 0 && !argsTypeList[0].optional) {
+			console.log(code)
 			const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 			await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** requires at least one argument.`);
 			return true;
