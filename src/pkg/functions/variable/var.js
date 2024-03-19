@@ -14,7 +14,7 @@ async function var_func(code, client, message, raw, options) {
 			code = await FunctionResult(code, raw, '');
 		} else {
 			if (!(args[0] in options.variables))
-				code = await FunctionResult(code, raw, "undefined");
+				code = await FunctionResult(code, raw, '');
 			else
 				code = await FunctionResult(code, raw, options.variables[args[0]]);
 		}
