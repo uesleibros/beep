@@ -15,7 +15,7 @@ async function setVar(code, client, message, raw, options) {
 			await CustomFunctionError("setVar", args, 1, message, code, raw, `Invalid user id: "${args[1]}".`);
 			error = true;
 		} else {
-			await client.database.setTableValue("userGlobalTable", { value: args[1], variableName: args[0], channelId: args[2] });
+			await client.database.setTableValue("userGlobalTable", { value: args[1], variableName: args[0], id: args[2] });
 			code = await FunctionResult(code, raw, '');
 		}
 	}
