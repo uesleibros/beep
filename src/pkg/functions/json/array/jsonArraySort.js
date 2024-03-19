@@ -1,4 +1,5 @@
 const FunctionError = require("../../../helpers/errors/FunctionError.js");
+const CustomFunctionError = require("../../helpers/errors/CustomFunctionError.js");
 const FunctionResult = require("../../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../../helpers/parseArgs.js");
