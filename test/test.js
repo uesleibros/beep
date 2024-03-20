@@ -27,13 +27,7 @@ bot.createCommand(
 	"teste",
 	true,
 	`
-		$addButton[no;bt1;Botão 1;primary;no;]
-
-		$onInteraction[
-			$if[$customID==bt1]
-				$editButton[bt1;no;$randomString[5];primary;no;]
-			$endif
-		]
+		$noMentionMessage[1]
 	`
 
 );

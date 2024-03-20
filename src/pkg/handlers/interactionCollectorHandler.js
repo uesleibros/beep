@@ -7,13 +7,14 @@ function interactionCollectorHandler(client, messages, options) {
 
 		const collector = botMessage.createMessageComponentCollector({
 			filter: (m) => m.channelId === botMessage.channel.id,
-			time: 60_000
+			time: 30_000
 		});
 
 		collector.on("collect", async (interaction) => {
 			if (options.interactionHandler) {
 				options.embed = new EmbedBuilder();
 				await InterpreterInteraction(client, [authorMessage, interaction], options.interactionHandler, options);
+				collector.resetTimer({ time: 30_000 });
 				return;
 			}
 		});
