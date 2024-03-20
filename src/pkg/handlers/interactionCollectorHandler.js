@@ -5,8 +5,8 @@ function interactionCollectorHandler(client, messages, options) {
 	if (options.interactionComponents.length > 0) {
 		let [authorMessage, botMessage] = messages;
 
-		const collector = authorMessage.channel.createMessageComponentCollector({
-			filter: (m) => m.channelId === authorMessage.channel.id,
+		const collector = botMessage.createMessageComponentCollector({
+			filter: (m) => m.channelId === botMessage.channel.id,
 			time: 60_000
 		});
 
