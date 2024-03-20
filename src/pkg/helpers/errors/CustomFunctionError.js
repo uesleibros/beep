@@ -1,7 +1,7 @@
 function getLineAndColumn(text, line) {
 	const lines = text.split("\n");
 	for (let i = 0; i < lines.length; i++) {
-		if (lines[i].includes(line)) {
+		if (lines[i].split("[")[0].includes(line.split("[")[0])) {
 			const column = lines[i].indexOf(line) + 1;
 			return [i+1, column];
 		}

@@ -1,5 +1,5 @@
 const FunctionError = require("../../../helpers/errors/FunctionError.js");
-const CustomFunctionError = require("../../helpers/errors/CustomFunctionError.js");
+const CustomFunctionError = require("../../../helpers/errors/CustomFunctionError.js");
 const FunctionResult = require("../../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../../helpers/parseArgs.js");
@@ -15,12 +15,12 @@ async function jsonArrayCount(code, client, message, raw, options) {
 		} else {
 			let cJSON = options.json.object;
 
-			for (key of args) {
+			for (const key of args) {
 				cJSON = cJSON[isNaN(key) ? key : Number(key)];
 			}
 
 			if (!Array.isArray(cJSON)) {
-				await message.channel.send("`$jsonArrayCount` provided key not result in a list.")
+				await CustomFunctionError("jsonArrayCount", args, args.length - 1, message, code, raw, `Provided key "${key}" not is a list.`);
 				error = true;
 			} else {
 				code = await FunctionResult(code, raw, Number(cJSON.length));

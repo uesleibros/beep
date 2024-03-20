@@ -3,7 +3,7 @@ const parseType = require("../parseType.js");
 function getLineAndColumn(text, line) {
 	const lines = text.split("\n");
 	for (let i = 0; i < lines.length; i++) {
-		if (lines[i].includes(line)) {
+		if (lines[i].split("[")[0].includes(line.split("[")[0])) {
 			const column = lines[i].indexOf(line) + 1;
 			return [i+1, column];
 		}
@@ -18,23 +18,23 @@ function verifyClosure(code) {
 	let escape = false;
 
 	for (let i = 0; i < code.length; i++) {
-	  const char = code[i];
-	  
-	  if (escape) {
-	      escape = false;
-	      continue;
-	  }
-	  
-	  if (char === "\\") {
-	      escape = true;
-	      continue;
-	  }
-	  
-	  if (char === '[') {
-	      openings++;
-	  } else if (char === ']') {
-	      closures++;
-	  }
+		const char = code[i];
+
+		if (escape) {
+			escape = false;
+			continue;
+		}
+
+		if (char === "\\") {
+			escape = true;
+			continue;
+		}
+
+		if (char === '[' && !escape) {
+			openings++;
+		} else if (char === ']' && !escape) {
+			closures++;
+		}
 	}
 
 	return openings === closures;

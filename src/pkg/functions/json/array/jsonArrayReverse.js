@@ -1,5 +1,5 @@
 const FunctionError = require("../../../helpers/errors/FunctionError.js");
-const CustomFunctionError = require("../../helpers/errors/CustomFunctionError.js");
+const CustomFunctionError = require("../../../helpers/errors/CustomFunctionError.js");
 const FunctionResult = require("../../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../../helpers/parseArgs.js");
@@ -20,7 +20,7 @@ async function jsonArrayReverse(code, client, message, raw, options) {
 			}
 
 			if (!Array.isArray(cJSON)) {
-				await message.channel.send("`$jsonArrayReverse` provided key not result in a list.")
+				await CustomFunctionError("jsonArrayReverse", args, args.length - 1, message, code, raw, `Provided key "${args[args.length - 1]}" not is a list.`);
 				error = true;
 			} else {
 				code = await FunctionResult(code, raw, cJSON.reverse());

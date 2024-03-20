@@ -1,5 +1,5 @@
 const FunctionError = require("../../../helpers/errors/FunctionError.js");
-const CustomFunctionError = require("../../helpers/errors/CustomFunctionError.js");
+const CustomFunctionError = require("../../../helpers/errors/CustomFunctionError.js");
 const FunctionResult = require("../../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../../helpers/parseArgs.js");
@@ -24,20 +24,21 @@ async function jsonArraySort(code, client, message, raw, options) {
 
 	if (!error) {
 		if (!options.json.object) {
-			await message.channel.send("`$jsonArraySort` unable to work, try define a json using: `$jsonParse[...]`.");
+			await CustomFunctionError("jsonArraySort", args, -1, message, code, raw, "Unable to work without parsed json object, try define a json using: `$jsonParse[...]`");
 			error = true;
 		} else {
 			let cJSON = options.json.object;
 
-			for (key of args) {
+			for (const key of args) {
 				cJSON = cJSON[isNaN(key) ? key : Number(key)];
 			}
 
 			if (!Array.isArray(cJSON)) {
-				await message.channel.send("`$jsonArraySort` provided key not result in a list.")
+				await CustomFunctionError("jsonArraySort", args, args.length - 1, message, code, raw, `Provided key "${key}" not is a list.`);
 				error = true;
 			} else {
-				code = await FunctionResult(code, raw, makeSort(cJSON));
+				makeSort(cJSON)
+				code = await FunctionResult(code, raw, '');
 			}
 		}
 	}
