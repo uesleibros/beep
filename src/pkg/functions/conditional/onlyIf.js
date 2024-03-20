@@ -20,11 +20,11 @@ async function onlyIf(code, client, message, raw, options) {
 		if (!["true", "false"].includes(result)) {
 			await CustomFunctionError("onlyIf", args, 0, message, code, raw, `Invalid check conditional: **${args[0]}**.`);
 			error = true;
-		} else {
-			if (result === "false") {
-				await message.channel.send(args[1]);
-				error = true;
-			}
+		}
+
+		if (result === "false") {
+			await message.channel.send(args[1]);
+			error = true;
 		}
 		code = await FunctionResult(code, raw, '');
 	}
