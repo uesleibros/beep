@@ -4,9 +4,9 @@ const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 const parseType = require("../../helpers/parseType.js");
 
-async function var_func(code, client, message, raw, options) {
+async function localVar(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("var", ["string:non-op", "string:op"], args, false, options.originalCode, raw, message);
+	const error = await FunctionError("localVar", ["string:non-op", "string:op"], args, false, options.originalCode, raw, message);
 
 	if (!error) {
 		if (args.length > 1) {
@@ -23,4 +23,4 @@ async function var_func(code, client, message, raw, options) {
 	return { code, error, options };
 }
 
-module.exports = var_func;
+module.exports = localVar;

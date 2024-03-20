@@ -41,16 +41,21 @@ function verifyClosure(code) {
 }
 
 let endUnlimitedIndex = 0;
+let cachedArgsValue = [];
+
 async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code, raw, message) {
 	let unlimitedIndex = -1;
 	endUnlimitedIndex = 0;
+
+	if (cachedArgsValue.length === 0)
+		cachedArgsValue = argsValue;
 
 	if (!argsValue)
 		return true;
 
 	if (!verifyClosure(raw)) {
 		const [functionLine, functionColumn] = getLineAndColumn(code, raw);
-		await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** not closed properly with \`]\`.`);
+		await message.channel.send(`Function \`$${name}\` at **${functionLine + raw.split("\n").length - 1}:${raw.split("\n")[raw.split("\n").length - 1].trim().length}** not closed properly with \`]\`.`);
 		return true;
 	}
 
@@ -91,7 +96,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 				const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 				let sumIndex = 0;
 
-				for (const argIndex in argsValue) {
+				for (const argIndex in cachedArgsValue) {
 					if (argIndex < i)
 						sumIndex += argsValue[argIndex].length + 1;
 				}
@@ -106,7 +111,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 				const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 				let sumIndex = 0;
 
-				for (const argIndex in argsValue) {
+				for (const argIndex in cachedArgsValue) {
 					if (argIndex < i)
 						sumIndex += argsValue[argIndex].length + 1;
 				}
@@ -118,7 +123,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 				const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 				let sumIndex = 0;
 
-				for (const argIndex in argsValue) {
+				for (const argIndex in cachedArgsValue) {
 					if (argIndex < i)
 						sumIndex += argsValue[argIndex].length + 1;
 				}
@@ -135,7 +140,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 		const [functionLine, functionColumn] = getLineAndColumn(code, raw);
 		let sumIndex = 0;
 
-		for (const argIndex in argsValue) {
+		for (const argIndex in cachedArgsValue) {
 			if (argIndex < argsType.length)
 				sumIndex += argsValue[argIndex].length + 1;
 		}
