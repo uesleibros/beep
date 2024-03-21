@@ -11,7 +11,12 @@ function parseType(content) {
 	if (!isNaN(content)) {
 		return Number(content);
 	}
-	return content;
+
+	try {
+		return JSON.parse(content);
+	} catch (_) {
+		return content;
+	}
 }
 
 module.exports = parseType;

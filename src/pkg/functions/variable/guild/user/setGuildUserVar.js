@@ -15,7 +15,18 @@ async function setGuildUserVar(code, client, message, raw, options) {
 			await CustomFunctionError("setGuildUserVar", args, 2, message, code, raw, `Provided invalid user id: "${args[2]}"`);
 			error = true;
 		} else {
-			await client.database.setTableValue("userGuildTable", { value: args[1], variableName: args[0], guildId: message.guildId, id: user.id });
+			const isValid = await client.database.setTableValue("userGuildTable", { value: args[1], variableName: args[0], guildId: message.guildId, id: user.id });
+
+			switch (isValid) {
+				case "undefined":
+					await CustomFunctionError("setGuildUserVar", args, 0, message, code, raw, `Variable "${args[0]}" is not defined.`);
+					error = true;
+					break; 
+				case "invalid-format":
+					await CustomFunctionError("setGuildUserVar", args, 1, message, code, raw, `The value doesn't match with type of variable "${args[0]}", only accept "${client.variables[args[0]].type}" type.`);
+					error = true;
+					break;
+			}
 			code = await FunctionResult(code, raw, '');
 		}
 	}

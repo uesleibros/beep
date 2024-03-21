@@ -1,4 +1,5 @@
 const sqlite3 = require("sqlite3").verbose();
+const parseType = require("../helpers/parseType.js");
 
 const _createTables = Symbol("deployEvents");
 
@@ -101,29 +102,33 @@ class Database {
 				}
 
 				if (Object.keys(this.client.variables).includes(options.variableName)) {
-					if (!row) {
-						const stmt = this.db.prepare("INSERT INTO " + table + " (" + Object.keys(options).join(", ") + ") VALUES (" + Object.values(options).map(() => "?").join(", ") + ")");
+					if (typeof parseType(options.value) === this.client.variables[options.variableName].type || this.client.variables[options.variableName].type === "any") {
+						if (!row) {
+							const stmt = this.db.prepare("INSERT INTO " + table + " (" + Object.keys(options).join(", ") + ") VALUES (" + Object.values(options).map(() => "?").join(", ") + ")");
 							stmt.run(Object.values(options), function (err) {
-							if (err) {
-								reject(err);
-							} else {
-								resolve();
-							}
-						});
-						stmt.finalize();
+								if (err) {
+									reject(err);
+								} else {
+									resolve("success");
+								}
+							});
+							stmt.finalize();
+						} else {
+							const stmt = this.db.prepare("UPDATE " + table + " SET value = ? WHERE " + Object.keys(options).filter(key => key !== "value").map(key => key + " = ?").join(" AND "));
+							stmt.run(Object.values(options), function (err) {
+								if (err) {
+									reject(err);
+								} else {
+									resolve("success");
+								}
+							});
+							stmt.finalize();
+						}
 					} else {
-						const stmt = this.db.prepare("UPDATE " + table + " SET value = ? WHERE " + Object.keys(options).filter(key => key !== "value").map(key => key + " = ?").join(" AND "));
-						stmt.run(Object.values(options), function (err) {
-							if (err) {
-								reject(err);
-							} else {
-								resolve();
-							}
-						});
-						stmt.finalize();
+						resolve("invalid-format");
 					}
 				} else {
-					resolve();
+					resolve("undefined");
 				}
 			});
 		});
@@ -139,7 +144,7 @@ class Database {
 
 				if (row && Object.keys(this.client.variables).includes(options.variableName)) {
 					const stmt = this.db.prepare("UPDATE " + table + " SET value = ? WHERE " + Object.keys(options).map(key => key + " = ?").join(" AND "));
-					stmt.run([this.client.variables[options.variableName], ...Object.values(options) ], function (err) {
+					stmt.run([this.client.variables[options.variableName].value, ...Object.values(options) ], function (err) {
 						if (err) {
 							reject(err);
 						} else {

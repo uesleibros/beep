@@ -15,7 +15,18 @@ async function setGlobalUserVar(code, client, message, raw, options) {
 			await CustomFunctionError("setGlobalUserVar", args, 1, message, code, raw, `Invalid user id: "${args[1]}".`);
 			error = true;
 		} else {
-			await client.database.setTableValue("userGlobalTable", { value: args[1], variableName: args[0], id: args[2] });
+			const isValid = await client.database.setTableValue("userGlobalTable", { value: args[1], variableName: args[0], id: args[2] });
+
+			switch (isValid) {
+				case "undefined":
+					await CustomFunctionError("setGlobalUserVar", args, 0, message, code, raw, `Variable "${args[0]}" is not defined.`);
+					error = true;
+					break; 
+				case "invalid-format":
+					await CustomFunctionError("setGlobalUserVar", args, 1, message, code, raw, `The value doesn't match with type of variable "${args[0]}", only accept "${client.variables[args[0]].type}" type.`);
+					error = true;
+					break;
+			}
 			code = await FunctionResult(code, raw, '');
 		}
 	}
