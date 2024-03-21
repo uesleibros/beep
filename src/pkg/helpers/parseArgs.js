@@ -15,7 +15,7 @@ async function parseArgs(client, message, args, options) {
 				const FUNC_NAME = match.replace("$", "").split("[")[0];
 
 				if (FUNC_NAME in client.functions) {
-					let usingMessage = null
+					let usingMessage = null;
 
 					if (options.reactionMessage) {
 						usingMessage = isReactionFunction(FUNC_NAME) ? options.reactionMessage : options.commonMessage;

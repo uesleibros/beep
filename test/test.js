@@ -86,5 +86,6 @@ bot.createVariables({
 
 
 		]}
-	`
+	`,
+	clicks: 0
 });

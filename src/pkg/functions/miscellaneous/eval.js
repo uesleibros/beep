@@ -1,9 +1,9 @@
-const FunctionError = require("../../../helpers/errors/FunctionError.js");
-const FunctionResult = require("../../../helpers/result/FunctionResult.js");
-const getFunctionArgs = require("../../../helpers/getFunctionArgs.js");
-const parseArgs = require("../../../helpers/parseArgs.js");
-const truncate = require("../../../helpers/truncate.js");
-const interpreter = require("../../../interpreter.js");
+const FunctionError = require("../../helpers/errors/FunctionError.js");
+const FunctionResult = require("../../helpers/result/FunctionResult.js");
+const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
+const parseArgs = require("../../helpers/parseArgs.js");
+const truncate = require("../../helpers/truncate.js");
+const interpreter = require("../../interpreter.js");
 
 async function eval_func(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);

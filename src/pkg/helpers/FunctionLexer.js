@@ -2,7 +2,6 @@ function FunctionLexer(function_raw) {
     const result = [];
     let bracketDepth = 0;
     let currentContent = '';
-    let isEscaped = false;
 
     for (let i = 0; i < function_raw.length; i++) {
         const char = function_raw[i];
@@ -13,20 +12,17 @@ function FunctionLexer(function_raw) {
         } else if (char === ']') {
             bracketDepth--;
             currentContent += char;
-        } else if (char === ";" && bracketDepth === 1 && !isEscaped) {
+        } else if (char === ";" && bracketDepth === 1) {
             currentContent += char;
-        } else if (char === "\\") {
-            isEscaped = true;
         } else if (bracketDepth > 0) {
             currentContent += char;
-            isEscaped = false;
-        } else if (char === '$' && !isEscaped) {
+        } else if (char === '$') {
             if (currentContent.length > 1) {
                 result.push(currentContent.trim());
                 currentContent = '';
             }
             currentContent += char;
-        } else if (currentContent.charAt(0) === "$" && !isEscaped) {
+        } else if (currentContent.charAt(0) === "$") {
             const regex = /[^a-zA-Z0-9\[\]]/;
             if (!regex.test(char)) {
                 currentContent += char;
@@ -35,8 +31,15 @@ function FunctionLexer(function_raw) {
                 currentContent = '';
             }
         } else {
-            currentContent += char;
-            isEscaped = false;
+            if (currentContent.charAt(0) === "$") {
+                const regex = /[^a-zA-Z0-9\[\]]/;
+                if (!regex.test(char)) {
+                    currentContent += char;
+                } else {
+                    result.push(currentContent.trim());
+                    currentContent = '';
+                }
+            }
         }
     }
 

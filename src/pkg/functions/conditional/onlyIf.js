@@ -23,7 +23,8 @@ async function onlyIf(code, client, message, raw, options) {
 		}
 
 		if (result === "false") {
-			await message.channel.send(args[1]);
+			if (args[1].trim().length > 0)
+				await message.channel.send(args[1]);
 			error = true;
 		}
 		code = await FunctionResult(code, raw, '');

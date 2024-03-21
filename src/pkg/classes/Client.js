@@ -4,6 +4,7 @@ const structuredFunctions = require("../helpers/structuredFunctions.js");
 const { GatewayIntentBits, Partials } = require("discord.js");
 const Discord = require("discord.js");
 const Database = require("../database/Database.js");
+const axios = require("axios");
 
 const _deployEvents = Symbol("deployEvents");
 
@@ -26,6 +27,7 @@ class Client extends Discord.Client {
 		this.variables = {};
 		this.database = new Database(path.join(__dirname, "../database/database.db"), this);
 		this.database.clearTables();
+		this.httpClient = axios.create();
 		this.functions = structuredFunctions();
 		this[_deployEvents](this);
 		this.login(options.token);
