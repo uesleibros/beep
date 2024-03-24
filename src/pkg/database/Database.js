@@ -79,7 +79,7 @@ class Database {
 					} else {
 						const { variableName, id, guildId } = options;
 						if (Object.keys(this.client.variables).includes(variableName)) {
-							await this.setTableValue(table, { ...options, value: this.client.variables[variableName]});
+							await this.setTableValue(table, { ...options, value: this.client.variables[variableName].value});
 							setTimeout(async () => {
 								const newValue = await this.getTableValue(table, options);
 								resolve(newValue);

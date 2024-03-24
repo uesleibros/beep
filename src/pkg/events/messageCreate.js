@@ -18,15 +18,17 @@ module.exports = {
 		const request = { object: null, headers: {} };
 		const msg = { mentionAuthor: true, reply: false, replyIn: null };
 		const json = { object: null };
+		const array = {};
 		const loop = { break: false };
-		const listAwaitedCommands = [];
+		const macro = { name: null, arguments: [], result: '', };
 		const interactionHandler = null;
 		const reactionHandler = null;
+		const awaitedCommandHandler = null;
 		const interactionComponents = [];
 		const curInteractionComponent = 0;
 		const commonMessage = message;
 		const botMessage = null;
-		const options = { embed, string, variables, envVariables, msg, json, loop, listAwaitedCommands, interactionComponents, curInteractionComponent, interactionHandler, reactionHandler, commonMessage, botMessage, request };
+		const options = { embed, string, variables, envVariables, msg, json, array, loop, macro, awaitedCommandHandler, interactionComponents, curInteractionComponent, interactionHandler, reactionHandler, commonMessage, botMessage, request };
 
 		if (this.client.prefix) {
 			if (message.content.startsWith(this.client.prefix)) {

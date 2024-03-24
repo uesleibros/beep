@@ -3,15 +3,14 @@ const FunctionResult = require("../../helpers/result/FunctionResult.js");
 const getFunctionArgs = require("../../helpers/getFunctionArgs.js");
 const parseArgs = require("../../helpers/parseArgs.js");
 
-async function name(code, client, message, raw, options) {
+async function channelCount(code, client, message, raw, options) {
 	const args = await parseArgs(client, message, getFunctionArgs(raw), options);
-	const error = await FunctionError("name", ["type:property"], args, false, options.originalCode, raw, message);
+	let error = await FunctionError("channelCount", [], args, true, options.originalCode, raw, message);
 
-	if (!error) {
+	if (!error)
+		code = await FunctionResult(code, raw, message.guild.channels.cache.filter((c) => c.type !== 4).size);
 	
-	}
-
 	return { code, error, options };
-};
+}
 
-module.exports = name;
+module.exports = channelCount;

@@ -29,12 +29,17 @@ class Client extends Discord.Client {
 		this.database.clearTables();
 		this.httpClient = axios.create();
 		this.functions = structuredFunctions();
+		this.macros = {};
 		this[_deployEvents](this);
 		this.login(options.token);
 	}
 
 	createCommand(name, canCall, code) {
 		this.commands[name] = { "code": code, "can_call": canCall };
+	}
+
+	createMacro(name, canUseWithoutArgs, args, code) {
+		this.macros[name] = { canUseWithoutArgs, args, code };
 	}
 
 	createVariables(variables) {

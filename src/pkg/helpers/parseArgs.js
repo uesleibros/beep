@@ -2,7 +2,7 @@ const isInteractionFunction = require("./isInteractionFunction.js");
 const isReactionFunction = require("./isReactionFunction.js");
 const FunctionLexer = require("./FunctionLexer.js");
 
-async function parseArgs(client, message, args, options) {
+async function parseArgs(client, message, args, options, rawMode = false) {
 	let listArgs = [...args];
 	for (const idx in args) {
 		let code = args[idx];
@@ -10,7 +10,7 @@ async function parseArgs(client, message, args, options) {
 		const matches = FunctionLexer(code);
 		let error;
 
-		if (matches.length > 0) {
+		if (matches.length > 0 && !rawMode) {
 			for (const match of matches) {
 				const FUNC_NAME = match.replace("$", "").split("[")[0];
 

@@ -1,5 +1,7 @@
 const Condition = require("../../helpers/parser/Condition.js");
 const FunctionLexer = require("../../helpers/FunctionLexer.js");
+const InterpreterMacro = require("./InterpreterMacro.js");
+const getFunctionArgs = require("../getFunctionArgs.js");
 const truncate = require("../../helpers/truncate.js");
 
 async function InterpreterBasic(client, message, code, options) {
@@ -24,7 +26,7 @@ async function InterpreterBasic(client, message, code, options) {
 
 	if (commandMatches.length > 0) {
 		for (const match of commandMatches) {
-			const FUNC_NAME = match.replace("$", "").split("[")[0];
+			const FUNC_NAME = match.replace(/[\$@]/g, "").split("[")[0];
 
 			if (FUNC_NAME === "if") {
 				code = await Condition(client, message, code, options);
@@ -46,6 +48,15 @@ async function InterpreterBasic(client, message, code, options) {
 
 				if (func_result.returnHere)
 					return [code, error, commandWaitList];
+
+				if (error) return [code, error, commandWaitList];
+			} else if (Object.keys(client.macros).includes(FUNC_NAME)) {
+				options.macro.arguments = getFunctionArgs(match);
+				options.macro.name = FUNC_NAME;
+				const func_result = await InterpreterMacro(code, client, message, match, options);
+				code = func_result.code;
+				error = func_result.error;
+				options = func_result.options;
 
 				if (error) return [code, error, commandWaitList];
 			}

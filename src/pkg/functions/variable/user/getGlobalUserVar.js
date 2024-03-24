@@ -16,6 +16,7 @@ async function getGlobalUserVar(code, client, message, raw, options) {
 			error = true;
 		} else {
 			const res = await client.database.getTableValue("userGlobalTable", { variableName: args[0], id: args[1] });
+			console.log(res)
 			if (!res) {
 				await CustomFunctionError("getGlobalUserVar", args, 0, message, code, raw, `Variable "${args[0]}" is not declared.`);
 				error = true;

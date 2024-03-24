@@ -16,13 +16,13 @@ function FunctionLexer(function_raw) {
             currentContent += char;
         } else if (bracketDepth > 0) {
             currentContent += char;
-        } else if (char === '$') {
+        } else if (["$", "@"].includes(char)) {
             if (currentContent.length > 1) {
                 result.push(currentContent.trim());
                 currentContent = '';
             }
             currentContent += char;
-        } else if (currentContent.charAt(0) === "$") {
+        } else if (["$", "@"].includes(currentContent.charAt(0))) {
             const regex = /[^a-zA-Z0-9\[\]]/;
             if (!regex.test(char)) {
                 currentContent += char;
@@ -31,7 +31,7 @@ function FunctionLexer(function_raw) {
                 currentContent = '';
             }
         } else {
-            if (currentContent.charAt(0) === "$") {
+            if (["$", "@"].includes(currentContent.charAt(0))) {
                 const regex = /[^a-zA-Z0-9\[\]]/;
                 if (!regex.test(char)) {
                     currentContent += char;

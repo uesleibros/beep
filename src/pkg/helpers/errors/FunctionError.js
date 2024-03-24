@@ -12,6 +12,15 @@ function getLineAndColumn(text, line) {
 	return [-1, -1];
 }
 
+function isJSON(str) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		return false;
+	}  
+	return true;
+}
+
 function verifyClosure(code) {
 	let openings = 0;
 	let closures = 0;
@@ -43,7 +52,7 @@ function verifyClosure(code) {
 let endUnlimitedIndex = 0;
 let cachedArgsValue = [];
 
-async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code, raw, message) {
+async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code, raw, message, symbol = "$") {
 	let unlimitedIndex = -1;
 	endUnlimitedIndex = 0;
 
@@ -55,7 +64,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 
 	if (!verifyClosure(raw)) {
 		const [functionLine, functionColumn] = getLineAndColumn(code, raw);
-		await message.channel.send(`Function \`$${name}\` at **${functionLine + raw.split("\n").length - 1}:${raw.split("\n")[raw.split("\n").length - 1].trim().length}** not closed properly with \`]\`.`);
+		await message.channel.send(`${symbol === "$" ? "Function" : "Macro" } \`${symbol}${name}\` at **${functionLine + raw.split("\n").length - 1}:${raw.split("\n")[raw.split("\n").length - 1].trim().length}** not closed properly with \`]\`.`);
 		return true;
 	}
 
@@ -67,14 +76,14 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 	if (!canUseWithoutArgs) {
 		if (argsValue?.length === 0 && !argsTypeList[0].optional) {
 			const [functionLine, functionColumn] = getLineAndColumn(code, raw);
-			await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** requires at least one argument.`);
+			await message.channel.send(`${symbol === "$" ? "Function" : "Macro" } \`${symbol}${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** requires at least one argument.`);
 			return true;
 		}
 	}
 
 	if (argsType.length === 0 && canUseWithoutArgs && argsValue.length > 0) {
 		const [functionLine, functionColumn] = getLineAndColumn(code, raw);
-		await message.channel.send(`Function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** does not accept any arguments.`);
+		await message.channel.send(`${symbol === "$" ? "Function" : "Macro" } \`${symbol}${name}\` at **${functionLine}:${functionColumn + (name.length + 1)}** does not accept any arguments.`);
 		return true;
 	}
 
@@ -86,10 +95,10 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 
 			if (unlimited) {
 				unlimitedIndex = i;
-				if (await CheckUnlimited(name, argType, argsValue.slice(unlimitedIndex), message, unlimitedIndex, code, raw))
+				if (await CheckUnlimited(name, argType, argsValue.slice(unlimitedIndex), message, unlimitedIndex, code, raw, symbol))
 					return true;
 				if (argsType.slice(unlimitedIndex + 1).length > 0)
-					return await FunctionError(name, argsType.slice(unlimitedIndex + 1), argsValue.slice(endUnlimitedIndex), canUseWithoutArgs, code, raw, message);
+					return await FunctionError(name, argsType.slice(unlimitedIndex + 1), argsValue.slice(endUnlimitedIndex), canUseWithoutArgs, code, raw, message, symbol);
 			}
 
 			if (argValue === undefined && !optional) {
@@ -100,7 +109,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 					if (argIndex < i)
 						sumIndex += argsValue[argIndex].length + 1;
 				}
-				await message.channel.send(`Position **${i + 1}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for function \`$${name}\` is required.`);
+				await message.channel.send(`Position **${i + 1}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` is required.`);
 				return true;
 			}
 
@@ -115,7 +124,31 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 					if (argIndex < i)
 						sumIndex += argsValue[argIndex].length + 1;
 				}
-				await message.channel.send(`Position **${i + 1}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for function \`$${name}\` must be a valid number, but provided: '${argsValue[i]}'.`);
+				await message.channel.send(`Position **${i + 1}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` must be a valid number, but provided: '${argsValue[i]}'.`);
+				return true;
+			}
+
+			if (argType === "array" && !Array.isArray(parseType(argValue))) {
+				const [functionLine, functionColumn] = getLineAndColumn(code, raw);
+				let sumIndex = 0;
+
+				for (const argIndex in cachedArgsValue) {
+					if (argIndex < i)
+						sumIndex += argsValue[argIndex].length + 1;
+				}
+				await message.channel.send(`Position **${i + 1}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` must be a valid array, but provided: '${argsValue[i]}'.`);
+				return true;
+			}
+
+			if (argType === "json" && !isJSON(argValue)) {
+				const [functionLine, functionColumn] = getLineAndColumn(code, raw);
+				let sumIndex = 0;
+
+				for (const argIndex in cachedArgsValue) {
+					if (argIndex < i)
+						sumIndex += argsValue[argIndex].length + 1;
+				}
+				await message.channel.send(`Position **${i + 1}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` must be a valid json, but provided: '${argsValue[i]}'.`);
 				return true;
 			}
 
@@ -127,7 +160,7 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 					if (argIndex < i)
 						sumIndex += argsValue[argIndex].length + 1;
 				}
-				await message.channel.send(`Position **${i + 1}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for function \`$${name}\` must be a boolean, but provided: '${argsValue[i]}'.`);
+				await message.channel.send(`Position **${i + 1}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` must be a boolean, but provided: '${argsValue[i]}'.`);
 				return true;
 			}
 		}
@@ -145,14 +178,14 @@ async function FunctionError(name, argsType, argsValue, canUseWithoutArgs, code,
 				sumIndex += argsValue[argIndex].length + 1;
 		}
 
-		await message.channel.send(`Too many arguments provided for function \`$${name}\` at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}**.`);
+		await message.channel.send(`Too many arguments provided for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}**.`);
 		return true;
 	}
 
 	return false;
 }
 
-async function CheckUnlimited(name, argType, argsValue, message, startIndex, code, raw) {
+async function CheckUnlimited(name, argType, argsValue, message, startIndex, code, raw, symbol = "$") {
 	for (let i = 0; i < argsValue.length; i++) {
 		const argValue = argsValue[i];
 
@@ -168,7 +201,7 @@ async function CheckUnlimited(name, argType, argsValue, message, startIndex, cod
 					if (argIndex < i)
 						sumIndex += argsValue[argIndex].length + 1;
 				}
-				await message.channel.send(`Position **${(i + 1) + startIndex}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for function \`$${name}\` must be a valid number, but provided: '${argsValue[i]}'.`);
+				await message.channel.send(`Position **${(i + 1) + startIndex}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` must be a valid number, but provided: '${argsValue[i]}'.`);
 				return true;
 			}
 		} else if (argType === "boolean") {
@@ -180,7 +213,31 @@ async function CheckUnlimited(name, argType, argsValue, message, startIndex, cod
 					if (argIndex < i)
 						sumIndex += argsValue[argIndex].length + 1;
 				}
-				await message.channel.send(`Position **${(i + 1) + startIndex}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for function \`$${name}\` must be a boolean, but provided: '${argsValue[i]}'.`);
+				await message.channel.send(`Position **${(i + 1) + startIndex}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` must be a boolean, but provided: '${argsValue[i]}'.`);
+				return true;
+			}
+		} else if (argType === "array") {
+			if (!Array.isArray(parseType(argValue))) {
+				const [functionLine, functionColumn] = getLineAndColumn(code, raw);
+				let sumIndex = 0;
+
+				for (const argIndex in argsValue) {
+					if (argIndex < i)
+						sumIndex += argsValue[argIndex].length + 1;
+				}
+				await message.channel.send(`Position **${(i + 1) + startIndex}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` must be a valid array, but provided: '${argsValue[i]}'.`);
+				return true;
+			}
+		} else if (argType === "json") {
+			if (!isJSON(argValue)) {
+				const [functionLine, functionColumn] = getLineAndColumn(code, raw);
+				let sumIndex = 0;
+
+				for (const argIndex in argsValue) {
+					if (argIndex < i)
+						sumIndex += argsValue[argIndex].length + 1;
+				}
+				await message.channel.send(`Position **${(i + 1) + startIndex}** at **${functionLine}:${functionColumn + (name.length + 1) + sumIndex}** for ${symbol === "$" ? "function" : "macro" } \`${symbol}${name}\` must be a valid json, but provided: '${argsValue[i]}'.`);
 				return true;
 			}
 		}

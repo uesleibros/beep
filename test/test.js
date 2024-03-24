@@ -22,18 +22,8 @@ function GenerateFunctionTree() {
 	return result;
 }
 
-
 bot.createCommand(
-	"teste",
-	true,
-	`
-		$noMentionMessage[1]
-	`
-
-);
-
-bot.createCommand(
-	"funcoes",
+	"functions",
 	true,
 	`
 		${GenerateFunctionTree()}
@@ -53,6 +43,6 @@ bot.createCommand(
 bot.createVariables({
 	money: {
 		value: 0,
-		type: "boolean"
+		type: "number"
 	}
 });
