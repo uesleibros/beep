@@ -47,7 +47,7 @@ async function InterpreterBasic(client, message, code, options) {
 				options = func_result.options;
 
 				if (func_result.returnHere)
-					return [code, error, commandWaitList];
+					return InterpreterBasic(client, message, code, options);
 
 				if (error) return [code, error, commandWaitList];
 			} else if (Object.keys(client.macros).includes(FUNC_NAME)) {

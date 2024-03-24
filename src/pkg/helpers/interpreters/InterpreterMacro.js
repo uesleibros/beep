@@ -40,6 +40,9 @@ async function InterpreterMacro(code, client, message, raw, options, changedMacr
 					const func_result = await BEEP_FUNCTION(macroCode, client, message, match, options);
 					error = func_result.error;
 					options = func_result.options;
+
+					if (func_result.returnHere)
+						return InterpreterMacro(code, client, message, raw, options, macroCode);
 				}
 			}
 		}

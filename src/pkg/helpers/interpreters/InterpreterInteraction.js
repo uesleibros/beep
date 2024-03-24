@@ -46,7 +46,7 @@ async function InterpreterInteraction(client, messages, code, options) {
 				options = func_result.options;
 
 				if (func_result.returnHere)
-					return;
+					return InterpreterInteraction(client, messages, code, options);
 
 				if (error) return;
 			}

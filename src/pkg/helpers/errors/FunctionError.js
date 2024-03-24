@@ -46,7 +46,7 @@ function verifyClosure(code) {
 		}
 	}
 
-	return openings === closures;
+	return openings <= closures;
 }
 
 let endUnlimitedIndex = 0;
